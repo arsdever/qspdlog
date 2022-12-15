@@ -6,7 +6,10 @@
 #include <spdlog/logger.h>
 
 QSpdLog::QSpdLog(QWidget *parent)
-    : QTableView(parent), _model(new QSpdLogModel) {}
+    : QTreeView(parent), _model(new QSpdLogModel) {
+
+  setModel(_model);
+}
 
 QSpdLog::~QSpdLog() {}
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <qtableview>
+#include <qtreeview>
 
 namespace spdlog {
 class logger;
@@ -8,7 +8,7 @@ class logger;
 
 class QSpdLogModel;
 
-class QSpdLog : public QTableView {
+class QSpdLog : public QTreeView {
 public:
   Q_OBJECT
 
