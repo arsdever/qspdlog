@@ -12,6 +12,8 @@ std::shared_ptr<spdlog::logger> createLogger(std::string name) {
 }
 
 int main(int argc, char **argv) {
+  Q_INIT_RESOURCE(resources);
+
   QApplication app(argc, argv);
 
   auto logger = createLogger("main");
