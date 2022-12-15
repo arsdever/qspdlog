@@ -1,8 +1,8 @@
 #pragma once
 
-#include <qabstractitemmodel>
+#include <qabstractlistmodel>
 
-class QSpdLogModel : public QAbstractTableModel {
+class QSpdLogModel : public QAbstractListModel {
 public:
   Q_OBJECT
 public:
