@@ -6,14 +6,15 @@
 
 namespace {
 
-const char *icon_names[] = {":/res/trace.png", ":/res/debug.png",
-                            ":/res/info.png", ":/res/warn.png",
-                            ":/res/error.png"};
+static constexpr std::array<const char *, 6> icon_names = {
+    ":/res/trace.png", ":/res/debug.png", ":/res/info.png",
+    ":/res/warn.png",  ":/res/error.png", ":/res/critical.png"};
 
-const char *level_names[] = {"Trace", "Debug",    "Info", "Warning",
-                             "Error", "Critical", "Off"};
+static constexpr std::array<const char *, 7> level_names = {
+    "Trace", "Debug", "Info", "Warning", "Error", "Critical", "Off"};
 
-const char *column_names[] = {"Level", "Time", "Message"};
+static constexpr std::array<const char *, 3> column_names = {"Level", "Time",
+                                                             "Message"};
 
 } // namespace
 
@@ -51,9 +52,14 @@ QVariant QSpdLogModel::data(const QModelIndex &index, int role) const {
       return QString::fromStdString(item.message);
     }
   }
-  case Qt::DecorationRole:
-    if (index.column() == 0)
-      return QIcon(QString(icon_names[_items[index.row()].level]));
+  case Qt::DecorationRole: {
+    if (index.column() == 0) {
+      const auto &item = _items[index.row()];
+      if (item.level >= 0 && item.level < icon_names.size()) {
+        return QIcon(QString(icon_names[_items[index.row()].level]));
+      }
+    }
+  }
   }
   return QVariant();
 }
