@@ -27,3 +27,5 @@ void QSpdLog::registerLogger(std::shared_ptr<spdlog::logger> logger) {
   logger->sinks().push_back(sink);
   _loggers.push_back(logger);
 }
+
+void QSpdLog::clear() { _model->clear(); }

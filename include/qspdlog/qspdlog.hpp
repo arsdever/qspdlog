@@ -16,6 +16,8 @@ public:
 public:
   void registerLogger(std::shared_ptr<spdlog::logger> logger);
 
+  void clear();
+
 private:
   class QSpdLogModel *_model;
   std::list<std::weak_ptr<spdlog::logger>> _loggers;
