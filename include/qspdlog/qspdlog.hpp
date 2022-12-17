@@ -10,9 +10,6 @@ class QSpdLogModel;
 
 class QSpdLog : public QTreeView {
 public:
-  Q_OBJECT
-
-public:
   explicit QSpdLog(QWidget *parent = nullptr);
   ~QSpdLog();
 
