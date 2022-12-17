@@ -53,7 +53,7 @@ void configureColorScheme() {
 }
 
 int main(int argc, char **argv) {
-  Q_INIT_RESOURCE(resources);
+  Q_INIT_RESOURCE(qspdlog_resources);
 
   QApplication app(argc, argv);
 
