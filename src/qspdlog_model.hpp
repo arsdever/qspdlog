@@ -17,6 +17,7 @@ public:
   ~QSpdLogModel() override = default;
 
   void addEntry(entry_t entry);
+  void clear();
 
 #pragma region QAbstractTableModel
   int rowCount(const QModelIndex &parent = QModelIndex()) const override;

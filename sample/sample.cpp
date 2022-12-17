@@ -1,10 +1,12 @@
 #include <qspdlog/qspdlog.hpp>
 
+#include <qaction>
 #include <qapplication>
-#include <qpushbutton>
-#include <qtimer>
 #include <qsettings>
 #include <qstylefactory>
+#include <qtimer>
+#include <qtoolbar>
+#include <qtoolbutton>
 #include <spdlog/spdlog.h>
 
 std::shared_ptr<spdlog::logger> createLogger(std::string name) {
@@ -52,6 +54,24 @@ void configureColorScheme() {
 #endif
 }
 
+void configureToolbar(QToolBar &toolbar, QSpdLog &logView,
+                      std::shared_ptr<spdlog::logger> logger) {
+  QAction *clearAction = toolbar.addAction("Clear");
+  QAction *generateAction = toolbar.addAction("Generate");
+
+  generateAction->connect(generateAction, &QAction::triggered, [logger](bool) {
+    // generate 10 messages with random levels
+    for (int i = 0; i < 10; ++i) {
+      logger->log(
+          static_cast<spdlog::level::level_enum>(rand() % spdlog::level::off),
+          "Message {}", i);
+    }
+  });
+
+  clearAction->connect(clearAction, &QAction::triggered,
+                       [&logView](bool) { logView.clear(); });
+}
+
 int main(int argc, char **argv) {
   Q_INIT_RESOURCE(qspdlog_resources);
 
@@ -61,21 +81,15 @@ int main(int argc, char **argv) {
 
   auto logger = createLogger("main");
 
-  QPushButton generate("Generate");
-  generate.connect(&generate, &QPushButton::clicked, [&logger]() {
-    // generate 10 messages with random levels
-    for (int i = 0; i < 10; ++i) {
-      logger->log(
-          static_cast<spdlog::level::level_enum>(rand() % spdlog::level::off),
-          "Message {}", i);
-    }
-  });
-  generate.show();
+  QToolBar toolbar("Manipulation toolbar");
+  toolbar.show();
 
   QSpdLog log;
   log.registerLogger(logger);
   log.show();
-  log.move(generate.pos() + QPoint(0, generate.height() + 50));
+  log.move(toolbar.pos() + QPoint(0, toolbar.height() + 50));
+
+  configureToolbar(toolbar, log, logger);
 
   int result = app.exec();
   spdlog::shutdown();

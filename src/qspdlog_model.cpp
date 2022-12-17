@@ -29,6 +29,12 @@ void QSpdLogModel::addEntry(entry_t entry) {
   endInsertRows();
 }
 
+void QSpdLogModel::clear() {
+  beginResetModel();
+  _items.clear();
+  endResetModel();
+}
+
 int QSpdLogModel::rowCount(const QModelIndex &parent) const {
   return _items.size();
 }
