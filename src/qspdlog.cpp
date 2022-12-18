@@ -2,6 +2,7 @@
 
 #include "qspdlog_model.hpp"
 #include "qspdlog_proxy_model.hpp"
+#include "qspdlog_filter_widget.hpp"
 #include "qt_logger_sink.hpp"
 
 #include <qlineedit>
@@ -9,7 +10,7 @@
 
 QSpdLog::QSpdLog(QWidget *parent)
     : QTreeView(parent), _sourceModel(new QSpdLogModel),
-      _proxyModel(new QSpdLogProxyModel), _filterWidget(new QLineEdit) {
+      _proxyModel(new QSpdLogProxyModel), _filterWidget(new QSpdLogFilterWidget) {
   setModel(_proxyModel);
 
   _proxyModel->setSourceModel(_sourceModel);
