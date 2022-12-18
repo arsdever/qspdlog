@@ -6,18 +6,23 @@
 template <typename Mutex>
 class qt_logger_sink : public spdlog::sinks::base_sink<Mutex> {
 public:
-  qt_logger_sink(QSpdLogModel &model) : _model(model) {}
+  qt_logger_sink(QSpdLogModel *model) : _model(model) {}
+
+  void invalidate() { _model = nullptr; }
 
 protected:
   void sink_it_(const spdlog::details::log_msg &msg) override {
-    _model.addEntry(
+    if (!_model)
+      return;
+
+    _model->addEntry(
         {msg.time.time_since_epoch(), msg.level, fmt::to_string(msg.payload)});
   }
 
   void flush_() override {}
 
 private:
-  QSpdLogModel &_model;
+  QSpdLogModel *_model;
 };
 
 #include <mutex>

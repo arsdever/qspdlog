@@ -85,9 +85,10 @@ int main(int argc, char **argv) {
   toolbar.show();
 
   QSpdLog log;
-  log.registerLogger(logger);
   log.show();
   log.move(toolbar.pos() + QPoint(0, toolbar.height() + 50));
+
+  logger->sinks().push_back(log.sink());
 
   configureToolbar(toolbar, log, logger);
 
