@@ -8,6 +8,7 @@
 QSpdLog::QSpdLog(QWidget *parent)
     : QTreeView(parent), _model(new QSpdLogModel) {
   setModel(_model);
+  setRootIsDecorated(false);
 }
 
 QSpdLog::~QSpdLog() {}
