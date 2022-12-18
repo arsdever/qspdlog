@@ -42,6 +42,9 @@ int QSpdLogModel::rowCount(const QModelIndex &parent) const {
 int QSpdLogModel::columnCount(const QModelIndex &parent) const { return 3; }
 
 QVariant QSpdLogModel::data(const QModelIndex &index, int role) const {
+  if (!index.isValid() || index.row() >= _items.size())
+    return QVariant();
+
   switch (role) {
   case Qt::DisplayRole: {
     auto const &item = _items[index.row()];
