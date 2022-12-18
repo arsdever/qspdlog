@@ -16,3 +16,8 @@ QSpdLogFilterWidget::QSpdLogFilterWidget(QWidget *parent)
 }
 
 QSpdLogFilterWidget::~QSpdLogFilterWidget() {}
+
+QSpdLogFilterWidget::FilteringSettings
+QSpdLogFilterWidget::filteringSettings() const {
+  return {static_cast<QLineEdit *>(_filterWidget)->text(), false, false};
+}

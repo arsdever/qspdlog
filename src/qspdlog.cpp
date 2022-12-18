@@ -1,8 +1,8 @@
 #include "qspdlog/qspdlog.hpp"
 
+#include "qspdlog_filter_widget.hpp"
 #include "qspdlog_model.hpp"
 #include "qspdlog_proxy_model.hpp"
-#include "qspdlog_filter_widget.hpp"
 #include "qt_logger_sink.hpp"
 
 #include <qlineedit>
@@ -10,10 +10,17 @@
 
 QSpdLog::QSpdLog(QWidget *parent)
     : QTreeView(parent), _sourceModel(new QSpdLogModel),
-      _proxyModel(new QSpdLogProxyModel), _filterWidget(new QSpdLogFilterWidget) {
+      _proxyModel(new QSpdLogProxyModel),
+      _filterWidget(new QSpdLogFilterWidget) {
   setModel(_proxyModel);
 
   _proxyModel->setSourceModel(_sourceModel);
+
+  QSpdLogFilterWidget *filterWidget =
+      static_cast<QSpdLogFilterWidget *>(_filterWidget);
+
+  connect(filterWidget, &QSpdLogFilterWidget::filterChanged, this,
+          &QSpdLog::updateFiltering);
 
   setRootIsDecorated(false);
 }
@@ -39,3 +46,17 @@ void QSpdLog::registerLogger(std::shared_ptr<spdlog::logger> logger) {
 void QSpdLog::clear() { _sourceModel->clear(); }
 
 QWidget *QSpdLog::filterWidget() const { return _filterWidget; }
+
+void QSpdLog::updateFiltering() {
+  QSpdLogFilterWidget *filterWidget =
+      static_cast<QSpdLogFilterWidget *>(_filterWidget);
+
+  QSpdLogFilterWidget::FilteringSettings settings =
+      filterWidget->filteringSettings();
+
+  if (settings.isRegularExpression) {
+    _proxyModel->setFilterRegularExpression(settings.text);
+  } else {
+    _proxyModel->setFilterFixedString(settings.text);
+  }
+}

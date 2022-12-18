@@ -21,6 +21,9 @@ public:
 
   QWidget* filterWidget() const;
 
+private slots:
+  void updateFiltering();
+
 private:
   QSpdLogModel *_sourceModel;
   QSpdLogProxyModel *_proxyModel;
