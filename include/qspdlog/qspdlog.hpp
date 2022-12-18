@@ -7,6 +7,7 @@ class logger;
 }
 
 class QSpdLogModel;
+class QSpdLogProxyModel;
 
 class QSpdLog : public QTreeView {
 public:
@@ -19,6 +20,7 @@ public:
   void clear();
 
 private:
-  class QSpdLogModel *_model;
+  QSpdLogModel *_sourceModel;
+  QSpdLogProxyModel *_proxyModel;
   std::list<std::weak_ptr<spdlog::logger>> _loggers;
 };
