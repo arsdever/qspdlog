@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QSortFilterProxyModel>
+#include <qsortfilterproxymodel>
 
 class QSpdLogProxyModel : public QSortFilterProxyModel {
   Q_OBJECT
