@@ -89,6 +89,8 @@ int main(int argc, char **argv) {
   log.show();
   log.move(toolbar.pos() + QPoint(0, toolbar.height() + 50));
 
+  log.filterWidget()->show();
+
   configureToolbar(toolbar, log, logger);
 
   int result = app.exec();

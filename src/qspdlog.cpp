@@ -9,7 +9,7 @@
 
 QSpdLog::QSpdLog(QWidget *parent)
     : QTreeView(parent), _sourceModel(new QSpdLogModel),
-      _proxyModel(new QSpdLogProxyModel) {
+      _proxyModel(new QSpdLogProxyModel), _filterWidget(new QLineEdit) {
   setModel(_proxyModel);
 
   _proxyModel->setSourceModel(_sourceModel);
@@ -36,3 +36,5 @@ void QSpdLog::registerLogger(std::shared_ptr<spdlog::logger> logger) {
 }
 
 void QSpdLog::clear() { _sourceModel->clear(); }
+
+QWidget *QSpdLog::filterWidget() const { return _filterWidget; }

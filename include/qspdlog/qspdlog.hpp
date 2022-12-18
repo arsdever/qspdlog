@@ -19,8 +19,11 @@ public:
 
   void clear();
 
+  QWidget* filterWidget() const;
+
 private:
   QSpdLogModel *_sourceModel;
   QSpdLogProxyModel *_proxyModel;
   std::list<std::weak_ptr<spdlog::logger>> _loggers;
+  QWidget *_filterWidget;
 };
