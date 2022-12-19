@@ -1,8 +1,8 @@
 #pragma once
 
-#include <qwidget>
+#include <QToolBar>
 
-class QSpdLogFilterWidget : public QWidget {
+class QSpdLogFilterWidget : public QToolBar {
   Q_OBJECT
 
 public:
@@ -23,4 +23,6 @@ signals:
 
 private:
   QWidget *_filterWidget;
+  QAction *_caseAction;
+  QAction *_regexAction;
 };

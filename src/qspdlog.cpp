@@ -54,7 +54,11 @@ void QSpdLog::updateFiltering() {
   QSpdLogFilterWidget::FilteringSettings settings =
       filterWidget->filteringSettings();
 
+  _proxyModel->setFilterCaseSensitivity(
+      settings.isCaseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive);
+
   if (settings.isRegularExpression) {
+    QRegularExpression regex(settings.text);
     _proxyModel->setFilterRegularExpression(settings.text);
   } else {
     _proxyModel->setFilterFixedString(settings.text);
