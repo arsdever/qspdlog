@@ -17,6 +17,7 @@ public:
   ~QSpdLogFilterWidget();
 
   FilteringSettings filteringSettings() const;
+  void checkInputValidity();
 
 signals:
   void filterChanged();

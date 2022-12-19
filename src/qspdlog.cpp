@@ -59,6 +59,11 @@ void QSpdLog::updateFiltering() {
 
   if (settings.isRegularExpression) {
     QRegularExpression regex(settings.text);
+
+    if (!regex.isValid()) {
+      return;
+    }
+
     _proxyModel->setFilterRegularExpression(settings.text);
   } else {
     _proxyModel->setFilterFixedString(settings.text);
