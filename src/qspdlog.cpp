@@ -12,6 +12,7 @@ QSpdLog::QSpdLog(QWidget *parent)
     : QTreeView(parent), _sourceModel(new QSpdLogModel),
       _proxyModel(new QSpdLogProxyModel),
       _filterWidget(new QSpdLogFilterWidget) {
+  Q_INIT_RESOURCE(qspdlog_resources);
   setModel(_proxyModel);
 
   _proxyModel->setSourceModel(_sourceModel);
@@ -23,24 +24,12 @@ QSpdLog::QSpdLog(QWidget *parent)
           &QSpdLog::updateFiltering);
 
   setRootIsDecorated(false);
+
+  _sink = std::make_shared<qt_logger_sink_mt>(_sourceModel);
 }
 
-QSpdLog::~QSpdLog() {}
-
-void QSpdLog::registerLogger(std::shared_ptr<spdlog::logger> logger) {
-  std::shared_ptr<qt_logger_sink_mt> sink = std::shared_ptr<qt_logger_sink_mt>(
-      new qt_logger_sink_mt(*_sourceModel), [logger](qt_logger_sink_mt *p) {
-        p->flush();
-        auto &sinks = logger->sinks();
-        logger->sinks().erase(
-            std::find_if(sinks.begin(), sinks.end(),
-                         [p](const std::shared_ptr<spdlog::sinks::sink> &s) {
-                           return s.get() == p;
-                         }));
-        delete p;
-      });
-  logger->sinks().push_back(sink);
-  _loggers.push_back(logger);
+QSpdLog::~QSpdLog() {
+  std::static_pointer_cast<qt_logger_sink_mt>(_sink)->invalidate();
 }
 
 void QSpdLog::clear() { _sourceModel->clear(); }
@@ -69,3 +58,5 @@ void QSpdLog::updateFiltering() {
     _proxyModel->setFilterFixedString(settings.text);
   }
 }
+
+spdlog::sink_ptr QSpdLog::sink() { return _sink; }

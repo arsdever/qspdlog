@@ -4,3 +4,5 @@ set(RESOURCES qspdlog_resources.qrc)
 
 add_library(qspdlog_lib STATIC ${HEADERS} ${SOURCES} ${RESOURCES})
 add_library(qspdlog::lib ALIAS qspdlog_lib)
+
+target_link_libraries(qspdlog_lib PUBLIC qspdlog::interface)
