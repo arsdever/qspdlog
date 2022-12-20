@@ -87,6 +87,7 @@ int main(int argc, char **argv) {
   QSpdLog log;
   log.show();
   log.move(toolbar.pos() + QPoint(0, toolbar.height() + 50));
+  log.filterWidget()->show();
 
   logger->sinks().push_back(log.sink());
 

@@ -10,6 +10,7 @@ class sink;
 } // namespace spdlog
 
 class QSpdLogModel;
+class QSpdLogProxyModel;
 
 class QSpdLog : public QTreeView {
 public:
@@ -18,11 +19,15 @@ public:
 
 public:
   void clear();
-
+  QWidget* filterWidget() const;
   std::shared_ptr<spdlog::sinks::sink> sink();
 
+private slots:
+  void updateFiltering();
+
 private:
-  class QSpdLogModel *_model;
-  std::list<std::weak_ptr<spdlog::logger>> _loggers;
+  QSpdLogModel *_sourceModel;
+  QSpdLogProxyModel *_proxyModel;
+  QWidget *_filterWidget;
   std::shared_ptr<spdlog::sinks::sink> _sink;
 };
