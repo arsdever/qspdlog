@@ -9,6 +9,8 @@ QSpdLog::QSpdLog(QWidget *parent)
     : QTreeView(parent), _model(new QSpdLogModel) {
   Q_INIT_RESOURCE(qspdlog_resources);
   setModel(_model);
+  setRootIsDecorated(false);
+
   _sink = std::make_shared<qt_logger_sink_mt>(_model);
 }
 
