@@ -1,5 +1,7 @@
 # QSpdLog
 
+![QSpdLog](docs/images/demo_screenshot.png)
+
 This repository contains the source code of a library, which provides a Qt widget for displaying log messages coming from the [spdlog](https://github.com/gabime/spdlog) library.
 
 ## Features
@@ -41,9 +43,8 @@ In its initial implementation only CMake tool is considered. To use the library 
    ```cpp
    QSpdLogWidget* widget = new QSpdLogWidget();
 
-   widget->registerLogger("logger1", spdlog::get("logger1"));
-   widget->registerLogger("logger2", spdlog::get("logger2"));
-   ...
+   auto sink = widget->sink();
+   // register the sink to whatever logger you want
 
    widget->show();
    ```
