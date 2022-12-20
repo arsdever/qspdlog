@@ -7,26 +7,17 @@
 
 QSpdLog::QSpdLog(QWidget *parent)
     : QTreeView(parent), _model(new QSpdLogModel) {
+  Q_INIT_RESOURCE(qspdlog_resources);
   setModel(_model);
   setRootIsDecorated(false);
+
+  _sink = std::make_shared<qt_logger_sink_mt>(_model);
 }
 
-QSpdLog::~QSpdLog() {}
-
-void QSpdLog::registerLogger(std::shared_ptr<spdlog::logger> logger) {
-  std::shared_ptr<qt_logger_sink_mt> sink = std::shared_ptr<qt_logger_sink_mt>(
-      new qt_logger_sink_mt(*_model), [logger](qt_logger_sink_mt *p) {
-        p->flush();
-        auto &sinks = logger->sinks();
-        logger->sinks().erase(
-            std::find_if(sinks.begin(), sinks.end(),
-                         [p](const std::shared_ptr<spdlog::sinks::sink> &s) {
-                           return s.get() == p;
-                         }));
-        delete p;
-      });
-  logger->sinks().push_back(sink);
-  _loggers.push_back(logger);
+QSpdLog::~QSpdLog() {
+  std::static_pointer_cast<qt_logger_sink_mt>(_sink)->invalidate();
 }
 
 void QSpdLog::clear() { _model->clear(); }
+
+spdlog::sink_ptr QSpdLog::sink() { return _sink; }
