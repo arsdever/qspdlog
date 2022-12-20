@@ -6,7 +6,7 @@ namespace spdlog {
 class logger;
 namespace sinks {
 class sink;
-}
+} // namespace sinks
 } // namespace spdlog
 
 class QSpdLogModel;
