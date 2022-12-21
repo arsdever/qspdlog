@@ -22,7 +22,7 @@ QSpdLogModel::QSpdLogModel(QObject *parent) : QAbstractListModel(parent) {}
 
 void QSpdLogModel::addEntry(entry_t entry) {
 
-  beginInsertRows(QModelIndex(), rowCount(), rowCount() + 1);
+  beginInsertRows(QModelIndex(), rowCount(), rowCount());
 
   _items.push_back(std::move(entry));
 
