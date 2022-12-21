@@ -1,5 +1,6 @@
 #include "qspdlog_toolbar.hpp"
 
+#include <qcombobox>
 #include <qlayout>
 #include <qlineedit>
 #include <qregularexpression>
@@ -14,15 +15,22 @@ QSpdLogToolBar::QSpdLogToolBar(QWidget *parent)
   _regexAction = addAction(".*");
   _regexAction->setCheckable(true);
 
+  QComboBox *autoScrollPolicySelection = new QComboBox();
+  autoScrollPolicySelection->addItems(
+      {"Manual Scroll", "Scroll To Bottom", "Smart Scroll"});
+  addWidget(autoScrollPolicySelection);
+
   auto lineEdit = static_cast<QLineEdit *>(_filterWidget);
 
   lineEdit->setPlaceholderText("Filter");
+
   connect(lineEdit, &QLineEdit::textChanged, this,
           &QSpdLogToolBar::filterChanged);
   connect(_caseAction, &QAction::toggled, this, &QSpdLogToolBar::filterChanged);
   connect(_regexAction, &QAction::toggled, this,
           &QSpdLogToolBar::filterChanged);
-
+  connect(autoScrollPolicySelection, &QComboBox::currentIndexChanged, this,
+          &QSpdLogToolBar::autoScrollPolicyChanged);
   connect(this, &QSpdLogToolBar::filterChanged, this,
           &QSpdLogToolBar::checkInputValidity);
 }

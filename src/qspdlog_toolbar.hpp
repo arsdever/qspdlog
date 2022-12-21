@@ -12,6 +12,12 @@ public:
     bool isCaseSensitive;
   };
 
+  enum AutoScrollPolicy {
+    AutoScrollPolicyDisabled = 0,
+    AutoScrollPolicyEnabled = 1,
+    AutoScrollPolicyEnabledIfBottom = 2
+  };
+
 public:
   QSpdLogToolBar(QWidget *parent = nullptr);
   ~QSpdLogToolBar();
@@ -21,6 +27,7 @@ public:
 
 signals:
   void filterChanged();
+  void autoScrollPolicyChanged(int index);
 
 private:
   QWidget *_filterWidget;

@@ -6,6 +6,7 @@
 #include "qt_logger_sink.hpp"
 
 #include <qlineedit>
+#include <qscrollbar>
 #include <spdlog/logger.h>
 
 QSpdLog::QSpdLog(QWidget *parent)
@@ -20,6 +21,13 @@ QSpdLog::QSpdLog(QWidget *parent)
 
   connect(toolbar, &QSpdLogToolBar::filterChanged, this,
           &QSpdLog::updateFiltering);
+  connect(toolbar, &QSpdLogToolBar::autoScrollPolicyChanged, this,
+          &QSpdLog::updateAutoScrollPolicy);
+  connect(_sourceModel, &QAbstractItemModel::rowsAboutToBeInserted, this,
+          [this](const QModelIndex &parent, int first, int last) {
+            auto bar = verticalScrollBar();
+            _scrollIsAtBottom = bar ? (bar->value() == bar->maximum()) : false;
+          });
 
   setRootIsDecorated(false);
 
@@ -52,6 +60,28 @@ void QSpdLog::updateFiltering() {
     _proxyModel->setFilterRegularExpression(settings.text);
   } else {
     _proxyModel->setFilterFixedString(settings.text);
+  }
+}
+
+void QSpdLog::updateAutoScrollPolicy(int index) {
+  QSpdLogToolBar::AutoScrollPolicy policy =
+      static_cast<QSpdLogToolBar::AutoScrollPolicy>(index);
+
+  QObject::disconnect(_scrollConnection);
+
+  switch (policy) {
+  case QSpdLogToolBar::AutoScrollPolicyEnabled:
+    _scrollConnection = connect(_sourceModel, &QSpdLogModel::rowsInserted, this,
+                                &QSpdLog::scrollToBottom);
+    break;
+  case QSpdLogToolBar::AutoScrollPolicyEnabledIfBottom:
+    _scrollConnection =
+        connect(_sourceModel, &QSpdLogModel::rowsInserted, this, [this]() {
+          if (_scrollIsAtBottom) {
+            scrollToBottom();
+          }
+        });
+    break;
   }
 }
 
