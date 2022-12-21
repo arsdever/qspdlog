@@ -2,7 +2,7 @@
 
 #include <QToolBar>
 
-class QSpdLogFilterWidget : public QToolBar {
+class QSpdLogToolBar : public QToolBar {
   Q_OBJECT
 
 public:
@@ -12,15 +12,22 @@ public:
     bool isCaseSensitive;
   };
 
+  enum AutoScrollPolicy {
+    AutoScrollPolicyDisabled = 0,
+    AutoScrollPolicyEnabled = 1,
+    AutoScrollPolicyEnabledIfBottom = 2
+  };
+
 public:
-  QSpdLogFilterWidget(QWidget *parent = nullptr);
-  ~QSpdLogFilterWidget();
+  QSpdLogToolBar(QWidget *parent = nullptr);
+  ~QSpdLogToolBar();
 
   FilteringSettings filteringSettings() const;
   void checkInputValidity();
 
 signals:
   void filterChanged();
+  void autoScrollPolicyChanged(int index);
 
 private:
   QWidget *_filterWidget;
