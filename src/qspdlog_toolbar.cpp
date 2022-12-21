@@ -1,10 +1,10 @@
-#include "qspdlog_filter_widget.hpp"
+#include "qspdlog_toolbar.hpp"
 
 #include <qlayout>
 #include <qlineedit>
 #include <qregularexpression>
 
-QSpdLogFilterWidget::QSpdLogFilterWidget(QWidget *parent)
+QSpdLogToolBar::QSpdLogToolBar(QWidget *parent)
     : QToolBar(parent), _filterWidget(new QLineEdit) {
   addWidget(_filterWidget);
 
@@ -18,25 +18,23 @@ QSpdLogFilterWidget::QSpdLogFilterWidget(QWidget *parent)
 
   lineEdit->setPlaceholderText("Filter");
   connect(lineEdit, &QLineEdit::textChanged, this,
-          &QSpdLogFilterWidget::filterChanged);
-  connect(_caseAction, &QAction::toggled, this,
-          &QSpdLogFilterWidget::filterChanged);
+          &QSpdLogToolBar::filterChanged);
+  connect(_caseAction, &QAction::toggled, this, &QSpdLogToolBar::filterChanged);
   connect(_regexAction, &QAction::toggled, this,
-          &QSpdLogFilterWidget::filterChanged);
+          &QSpdLogToolBar::filterChanged);
 
-  connect(this, &QSpdLogFilterWidget::filterChanged, this,
-          &QSpdLogFilterWidget::checkInputValidity);
+  connect(this, &QSpdLogToolBar::filterChanged, this,
+          &QSpdLogToolBar::checkInputValidity);
 }
 
-QSpdLogFilterWidget::~QSpdLogFilterWidget() {}
+QSpdLogToolBar::~QSpdLogToolBar() {}
 
-QSpdLogFilterWidget::FilteringSettings
-QSpdLogFilterWidget::filteringSettings() const {
+QSpdLogToolBar::FilteringSettings QSpdLogToolBar::filteringSettings() const {
   return {static_cast<QLineEdit *>(_filterWidget)->text(),
           _regexAction->isChecked(), _caseAction->isChecked()};
 }
 
-void QSpdLogFilterWidget::checkInputValidity() {
+void QSpdLogToolBar::checkInputValidity() {
   FilteringSettings settings = filteringSettings();
 
   if (!settings.isRegularExpression) {

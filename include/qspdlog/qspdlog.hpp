@@ -19,7 +19,7 @@ public:
 
 public:
   void clear();
-  QWidget* filterWidget() const;
+  QWidget *toolbar() const;
   std::shared_ptr<spdlog::sinks::sink> sink();
 
 private slots:
@@ -28,6 +28,6 @@ private slots:
 private:
   QSpdLogModel *_sourceModel;
   QSpdLogProxyModel *_proxyModel;
-  QWidget *_filterWidget;
+  QWidget *_toolbar;
   std::shared_ptr<spdlog::sinks::sink> _sink;
 };

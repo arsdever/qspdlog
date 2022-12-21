@@ -2,7 +2,7 @@
 
 #include <QToolBar>
 
-class QSpdLogFilterWidget : public QToolBar {
+class QSpdLogToolBar : public QToolBar {
   Q_OBJECT
 
 public:
@@ -13,8 +13,8 @@ public:
   };
 
 public:
-  QSpdLogFilterWidget(QWidget *parent = nullptr);
-  ~QSpdLogFilterWidget();
+  QSpdLogToolBar(QWidget *parent = nullptr);
+  ~QSpdLogToolBar();
 
   FilteringSettings filteringSettings() const;
   void checkInputValidity();

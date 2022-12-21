@@ -1,8 +1,8 @@
 #include "qspdlog/qspdlog.hpp"
 
-#include "qspdlog_filter_widget.hpp"
 #include "qspdlog_model.hpp"
 #include "qspdlog_proxy_model.hpp"
+#include "qspdlog_toolbar.hpp"
 #include "qt_logger_sink.hpp"
 
 #include <qlineedit>
@@ -10,17 +10,15 @@
 
 QSpdLog::QSpdLog(QWidget *parent)
     : QTreeView(parent), _sourceModel(new QSpdLogModel),
-      _proxyModel(new QSpdLogProxyModel),
-      _filterWidget(new QSpdLogFilterWidget) {
+      _proxyModel(new QSpdLogProxyModel), _toolbar(new QSpdLogToolBar) {
   Q_INIT_RESOURCE(qspdlog_resources);
   setModel(_proxyModel);
 
   _proxyModel->setSourceModel(_sourceModel);
 
-  QSpdLogFilterWidget *filterWidget =
-      static_cast<QSpdLogFilterWidget *>(_filterWidget);
+  QSpdLogToolBar *toolbar = static_cast<QSpdLogToolBar *>(_toolbar);
 
-  connect(filterWidget, &QSpdLogFilterWidget::filterChanged, this,
+  connect(toolbar, &QSpdLogToolBar::filterChanged, this,
           &QSpdLog::updateFiltering);
 
   setRootIsDecorated(false);
@@ -34,14 +32,12 @@ QSpdLog::~QSpdLog() {
 
 void QSpdLog::clear() { _sourceModel->clear(); }
 
-QWidget *QSpdLog::filterWidget() const { return _filterWidget; }
+QWidget *QSpdLog::toolbar() const { return _toolbar; }
 
 void QSpdLog::updateFiltering() {
-  QSpdLogFilterWidget *filterWidget =
-      static_cast<QSpdLogFilterWidget *>(_filterWidget);
+  QSpdLogToolBar *toolbar = static_cast<QSpdLogToolBar *>(_toolbar);
 
-  QSpdLogFilterWidget::FilteringSettings settings =
-      filterWidget->filteringSettings();
+  QSpdLogToolBar::FilteringSettings settings = toolbar->filteringSettings();
 
   _proxyModel->setFilterCaseSensitivity(
       settings.isCaseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive);
