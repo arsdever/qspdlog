@@ -53,10 +53,8 @@ QVariant QSpdLogModel::data(const QModelIndex &index, int role) const {
       return QString(level_names[item.level]);
     case 1:
       return QDateTime::fromMSecsSinceEpoch(
-                 std::chrono::duration_cast<std::chrono::milliseconds>(
-                     item.time)
-                     .count())
-          .toString();
+          std::chrono::duration_cast<std::chrono::milliseconds>(item.time)
+              .count());
     case 2:
       return QString::fromStdString(item.message);
     }
