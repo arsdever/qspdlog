@@ -9,6 +9,15 @@ This repository contains the source code of a library, which provides a Qt widge
 * Display log messages in a tree view
 * Display an icon for each log level
 * Separate message structure from message content
+* Search in messages
+  * via regular expressions
+  * use match case option
+* Auto scrolling feature with various options
+  * disabled
+  * scroll to the bottom when a new message is added
+  * scroll to the bottom when a new message is added unless the user scrolled up
+* **many more to come**
+* **[request or suggest new ones](https://github.com/arsdever/qspdlog/issues/new/choose)**
 
 ## Usage
 
