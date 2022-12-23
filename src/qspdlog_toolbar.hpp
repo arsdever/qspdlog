@@ -2,6 +2,11 @@
 
 #include <qtoolbar>
 
+class QWidget;
+class QAction;
+class QCompleter;
+class QAbstractItemModel;
+
 class QSpdLogToolBar : public QToolBar {
   Q_OBJECT
 
@@ -33,4 +38,6 @@ private:
   QWidget *_filterWidget;
   QAction *_caseAction;
   QAction *_regexAction;
+  QAbstractItemModel *_completerData;
+  QCompleter *_completer;
 };

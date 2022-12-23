@@ -1,12 +1,16 @@
 #include "qspdlog_toolbar.hpp"
 
 #include <qcombobox>
+#include <qcompleter>
 #include <qlayout>
 #include <qlineedit>
 #include <qregularexpression>
+#include <qstringlistmodel>
 
 QSpdLogToolBar::QSpdLogToolBar(QWidget *parent)
-    : QToolBar(parent), _filterWidget(new QLineEdit) {
+    : QToolBar(parent), _filterWidget(new QLineEdit(this)),
+      _completerData(new QStringListModel(this)),
+      _completer(new QCompleter(_completerData, this)) {
   addWidget(_filterWidget);
 
   _caseAction = addAction("Aa");
@@ -24,8 +28,24 @@ QSpdLogToolBar::QSpdLogToolBar(QWidget *parent)
 
   lineEdit->setPlaceholderText("Filter");
 
+  _completer->setCaseSensitivity(Qt::CaseInsensitive);
+  _completer->setCompletionMode(QCompleter::PopupCompletion);
+  lineEdit->setCompleter(_completer);
+
   connect(lineEdit, &QLineEdit::textChanged, this,
           &QSpdLogToolBar::filterChanged);
+  connect(lineEdit, &QLineEdit::editingFinished, this, [this]() {
+    QStringListModel *model = static_cast<QStringListModel *>(_completerData);
+    QString text = static_cast<QLineEdit *>(_filterWidget)->text();
+    if (text.isEmpty() || model->stringList().contains(text)) {
+      return;
+    }
+
+    if (model->insertRow(model->rowCount())) {
+      QModelIndex index = model->index(model->rowCount() - 1, 0);
+      model->setData(index, text);
+    }
+  });
   connect(_caseAction, &QAction::toggled, this, &QSpdLogToolBar::filterChanged);
   connect(_regexAction, &QAction::toggled, this,
           &QSpdLogToolBar::filterChanged);
