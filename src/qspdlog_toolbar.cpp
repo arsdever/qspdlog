@@ -1,12 +1,17 @@
 #include "qspdlog_toolbar.hpp"
 
 #include <qcombobox>
+#include <qcompleter>
 #include <qlayout>
 #include <qlineedit>
 #include <qregularexpression>
+#include <qsettings>
+#include <qstringlistmodel>
 
 QSpdLogToolBar::QSpdLogToolBar(QWidget *parent)
-    : QToolBar(parent), _filterWidget(new QLineEdit) {
+    : QToolBar(parent), _filterWidget(new QLineEdit(this)),
+      _completerData(new QStringListModel(this)),
+      _completer(new QCompleter(_completerData, this)) {
   addWidget(_filterWidget);
 
   _caseAction = addAction("Aa");
@@ -24,15 +29,34 @@ QSpdLogToolBar::QSpdLogToolBar(QWidget *parent)
 
   lineEdit->setPlaceholderText("Filter");
 
+  _completer->setCaseSensitivity(Qt::CaseInsensitive);
+  _completer->setCompletionMode(QCompleter::PopupCompletion);
+  lineEdit->setCompleter(_completer);
+
   connect(lineEdit, &QLineEdit::textChanged, this,
           &QSpdLogToolBar::filterChanged);
+  connect(lineEdit, &QLineEdit::editingFinished, this, [this]() {
+    QStringListModel *model = static_cast<QStringListModel *>(_completerData);
+    QString text = static_cast<QLineEdit *>(_filterWidget)->text();
+    if (text.isEmpty() || model->stringList().contains(text)) {
+      return;
+    }
+
+    if (model->insertRow(model->rowCount())) {
+      QModelIndex index = model->index(model->rowCount() - 1, 0);
+      model->setData(index, text);
+    }
+    saveCompleterHistory();
+  });
   connect(_caseAction, &QAction::toggled, this, &QSpdLogToolBar::filterChanged);
   connect(_regexAction, &QAction::toggled, this,
           &QSpdLogToolBar::filterChanged);
-  connect(autoScrollPolicySelection, &QComboBox::currentIndexChanged, this,
+  connect(autoScrollPolicySelection,
+          QOverload<int>::of(&QComboBox::currentIndexChanged), this,
           &QSpdLogToolBar::autoScrollPolicyChanged);
   connect(this, &QSpdLogToolBar::filterChanged, this,
           &QSpdLogToolBar::checkInputValidity);
+  loadCompleterHistory();
 }
 
 QSpdLogToolBar::~QSpdLogToolBar() {}
@@ -63,4 +87,20 @@ void QSpdLogToolBar::checkInputValidity() {
   palette.setColor(QPalette::Text, Qt::red);
   _filterWidget->setPalette(palette);
   _filterWidget->setToolTip(regex.errorString());
+}
+
+void QSpdLogToolBar::clearCompleterHistory() {
+  QStringListModel *model = static_cast<QStringListModel *>(_completerData);
+  model->setStringList({});
+  saveCompleterHistory();
+}
+
+void QSpdLogToolBar::loadCompleterHistory() {
+  QStringListModel *model = static_cast<QStringListModel *>(_completerData);
+  model->setStringList(QSettings().value("completerHistory").toStringList());
+}
+
+void QSpdLogToolBar::saveCompleterHistory() {
+  QStringListModel *model = static_cast<QStringListModel *>(_completerData);
+  QSettings().setValue("completerHistory", model->stringList());
 }

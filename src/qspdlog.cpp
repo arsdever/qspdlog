@@ -82,6 +82,8 @@ void QSpdLog::updateAutoScrollPolicy(int index) {
           }
         });
     break;
+  default:
+    break;
   }
 }
 
