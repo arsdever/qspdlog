@@ -5,6 +5,7 @@
 #include <qlayout>
 #include <qlineedit>
 #include <qregularexpression>
+#include <qsettings>
 #include <qstringlistmodel>
 
 QSpdLogToolBar::QSpdLogToolBar(QWidget *parent)
@@ -45,6 +46,7 @@ QSpdLogToolBar::QSpdLogToolBar(QWidget *parent)
       QModelIndex index = model->index(model->rowCount() - 1, 0);
       model->setData(index, text);
     }
+    saveCompleterHistory();
   });
   connect(_caseAction, &QAction::toggled, this, &QSpdLogToolBar::filterChanged);
   connect(_regexAction, &QAction::toggled, this,
@@ -54,6 +56,7 @@ QSpdLogToolBar::QSpdLogToolBar(QWidget *parent)
           &QSpdLogToolBar::autoScrollPolicyChanged);
   connect(this, &QSpdLogToolBar::filterChanged, this,
           &QSpdLogToolBar::checkInputValidity);
+  loadCompleterHistory();
 }
 
 QSpdLogToolBar::~QSpdLogToolBar() {}
@@ -84,4 +87,20 @@ void QSpdLogToolBar::checkInputValidity() {
   palette.setColor(QPalette::Text, Qt::red);
   _filterWidget->setPalette(palette);
   _filterWidget->setToolTip(regex.errorString());
+}
+
+void QSpdLogToolBar::clearCompleterHistory() {
+  QStringListModel *model = static_cast<QStringListModel *>(_completerData);
+  model->setStringList({});
+  saveCompleterHistory();
+}
+
+void QSpdLogToolBar::loadCompleterHistory() {
+  QStringListModel *model = static_cast<QStringListModel *>(_completerData);
+  model->setStringList(QSettings().value("completerHistory").toStringList());
+}
+
+void QSpdLogToolBar::saveCompleterHistory() {
+  QStringListModel *model = static_cast<QStringListModel *>(_completerData);
+  QSettings().setValue("completerHistory", model->stringList());
 }
