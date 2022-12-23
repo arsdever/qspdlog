@@ -29,7 +29,8 @@ QSpdLogToolBar::QSpdLogToolBar(QWidget *parent)
   connect(_caseAction, &QAction::toggled, this, &QSpdLogToolBar::filterChanged);
   connect(_regexAction, &QAction::toggled, this,
           &QSpdLogToolBar::filterChanged);
-  connect(autoScrollPolicySelection, &QComboBox::currentIndexChanged, this,
+  connect(autoScrollPolicySelection,
+          QOverload<int>::of(&QComboBox::currentIndexChanged), this,
           &QSpdLogToolBar::autoScrollPolicyChanged);
   connect(this, &QSpdLogToolBar::filterChanged, this,
           &QSpdLogToolBar::checkInputValidity);

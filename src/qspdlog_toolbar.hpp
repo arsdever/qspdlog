@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QToolBar>
+#include <qtoolbar>
 
 class QSpdLogToolBar : public QToolBar {
   Q_OBJECT
