@@ -12,6 +12,7 @@ This repository contains the source code of a library, which provides a Qt widge
 * Search in messages
   * via regular expressions
   * use match case option
+  * reuse search history
 * Auto scrolling feature with various options
   * disabled
   * scroll to the bottom when a new message is added
