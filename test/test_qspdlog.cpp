@@ -1,6 +1,7 @@
-#include "qobject"
+#include <QObject>
+#include <QTest>
+
 #include "qspdlog/qspdlog.hpp"
-#include "qtest"
 #include "spdlog/spdlog.h"
 
 class QSpdLogTest : public QObject
