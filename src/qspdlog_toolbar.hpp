@@ -1,6 +1,6 @@
 #pragma once
 
-#include <qtoolbar>
+#include <QToolBar>
 
 class QWidget;
 class QAction;

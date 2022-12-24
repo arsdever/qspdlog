@@ -1,6 +1,6 @@
 #pragma once
 
-#include <qabstractlistmodel>
+#include <QAbstractListModel>
 
 class QSpdLogModel : public QAbstractListModel
 {

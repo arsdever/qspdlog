@@ -1,6 +1,6 @@
-#include <qdatetime>
-#include <qfile>
-#include <qicon>
+#include <QDateTime>
+#include <QFile>
+#include <QIcon>
 
 #include "qspdlog_model.hpp"
 

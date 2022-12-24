@@ -1,5 +1,5 @@
-#include <qlineedit>
-#include <qscrollbar>
+#include <QLineEdit>
+#include <QScrollBar>
 #include <spdlog/logger.h>
 
 #include "qspdlog/qspdlog.hpp"

@@ -1,12 +1,13 @@
-#include <qaction>
-#include <qapplication>
-#include <qsettings>
-#include <qspdlog/qspdlog.hpp>
-#include <qstylefactory>
-#include <qtimer>
-#include <qtoolbar>
-#include <qtoolbutton>
-#include <spdlog/spdlog.h>
+#include <QAction>
+#include <QApplication>
+#include <QSettings>
+#include <QStyleFactory>
+#include <QTimer>
+#include <QToolBar>
+#include <QToolButton>
+
+#include "qspdlog/qspdlog.hpp"
+#include "spdlog/spdlog.h"
 
 std::shared_ptr<spdlog::logger> createLogger(std::string name)
 {
