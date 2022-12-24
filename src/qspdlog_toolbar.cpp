@@ -1,10 +1,10 @@
-#include <qcombobox>
-#include <qcompleter>
-#include <qlayout>
-#include <qlineedit>
-#include <qregularexpression>
-#include <qsettings>
-#include <qstringlistmodel>
+#include <QComboBox>
+#include <QCompleter>
+#include <QLayout>
+#include <QLineEdit>
+#include <QRegularExpression>
+#include <QSettings>
+#include <QStringListModel>
 
 #include "qspdlog_toolbar.hpp"
 

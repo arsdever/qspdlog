@@ -1,6 +1,6 @@
 #pragma once
 
-#include <qtreeview>
+#include <QTreeView>
 
 namespace spdlog
 {
