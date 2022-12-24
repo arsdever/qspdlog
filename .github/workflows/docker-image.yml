@@ -22,6 +22,7 @@ jobs:
           filters: |
             src:
               - 'ci/docker/**'
+              - '.github/workflows/docker-image.yml'
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2.1.0
@@ -44,20 +45,7 @@ jobs:
         if: steps.changes.outputs.src == 'true'
         with:
           images: |
-            arsdever/ubuntu-jammy-llvm-15
             ghcr.io/${{ github.repository }}
-          tags: |
-            type=sha
-
-      - name: Extract metadata (tags, labels) for Docker on main branch
-        # Only run when the PR is merged into master
-        if: |
-          github.ref == 'refs/heads/main' &&
-          github.event_name == 'push' &&
-          steps.changes.outputs.src == 'true'
-        id: meta_main
-        uses: docker/metadata-action@v4.1.1
-        with:
           tags: |
             type=raw,value=latest
 
@@ -68,5 +56,5 @@ jobs:
           context: .
           file: ci/docker/Dockerfile.base
           push: true
-          tags: ${{ steps.meta.outputs.tags }} ${{ steps.meta_main.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
