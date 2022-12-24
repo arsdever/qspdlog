@@ -8,42 +8,43 @@ class QCompleter;
 class QAbstractItemModel;
 class QSettings;
 
-class QSpdLogToolBar : public QToolBar {
-  Q_OBJECT
+class QSpdLogToolBar : public QToolBar
+{
+    Q_OBJECT
 
 public:
-  struct FilteringSettings {
-    QString text;
-    bool isRegularExpression;
-    bool isCaseSensitive;
-  };
+    struct FilteringSettings {
+        QString text;
+        bool isRegularExpression;
+        bool isCaseSensitive;
+    };
 
-  enum AutoScrollPolicy {
-    AutoScrollPolicyDisabled = 0,
-    AutoScrollPolicyEnabled = 1,
-    AutoScrollPolicyEnabledIfBottom = 2
-  };
+    enum AutoScrollPolicy {
+        AutoScrollPolicyDisabled = 0,
+        AutoScrollPolicyEnabled = 1,
+        AutoScrollPolicyEnabledIfBottom = 2
+    };
 
 public:
-  QSpdLogToolBar(QWidget *parent = nullptr);
-  ~QSpdLogToolBar();
+    QSpdLogToolBar(QWidget* parent = nullptr);
+    ~QSpdLogToolBar();
 
-  FilteringSettings filteringSettings() const;
-  void checkInputValidity();
-  void clearCompleterHistory();
+    FilteringSettings filteringSettings() const;
+    void checkInputValidity();
+    void clearCompleterHistory();
 
 signals:
-  void filterChanged();
-  void autoScrollPolicyChanged(int index);
+    void filterChanged();
+    void autoScrollPolicyChanged(int index);
 
 private:
-  void loadCompleterHistory();
-  void saveCompleterHistory();
+    void loadCompleterHistory();
+    void saveCompleterHistory();
 
 private:
-  QWidget *_filterWidget;
-  QAction *_caseAction;
-  QAction *_regexAction;
-  QAbstractItemModel *_completerData;
-  QCompleter *_completer;
+    QWidget* _filterWidget;
+    QAction* _caseAction;
+    QAction* _regexAction;
+    QAbstractItemModel* _completerData;
+    QCompleter* _completer;
 };

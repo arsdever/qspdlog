@@ -2,9 +2,10 @@
 
 #include <qsortfilterproxymodel>
 
-class QSpdLogProxyModel : public QSortFilterProxyModel {
-  Q_OBJECT
+class QSpdLogProxyModel : public QSortFilterProxyModel
+{
+    Q_OBJECT
 
 public:
-  QSpdLogProxyModel(QObject *parent = nullptr);
+    QSpdLogProxyModel(QObject* parent = nullptr);
 };
