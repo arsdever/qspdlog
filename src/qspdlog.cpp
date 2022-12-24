@@ -3,6 +3,7 @@
 #include <spdlog/logger.h>
 
 #include "qspdlog/qspdlog.hpp"
+
 #include "qspdlog_model.hpp"
 #include "qspdlog_proxy_model.hpp"
 #include "qspdlog_toolbar.hpp"
@@ -83,7 +84,7 @@ void QSpdLog::updateAutoScrollPolicy(int index)
     QObject::disconnect(_scrollConnection);
 
     switch (policy) {
-        case QSpdLogToolBar::AutoScrollPolicyEnabled:
+        case QSpdLogToolBar::AutoScrollPolicyEnabled: {
             _scrollConnection = connect(
                 _sourceModel,
                 &QSpdLogModel::rowsInserted,
@@ -91,17 +92,30 @@ void QSpdLog::updateAutoScrollPolicy(int index)
                 &QSpdLog::scrollToBottom
             );
             break;
-        case QSpdLogToolBar::AutoScrollPolicyEnabledIfBottom:
+        }
+
+        case QSpdLogToolBar::AutoScrollPolicyEnabledIfBottom: {
             _scrollConnection = connect(
                 _sourceModel,
                 &QSpdLogModel::rowsInserted,
                 this,
                 [ this ]() {
+                // We can't check if the scrollbar is at the bottom here because
+                // the new rows are already inserted and the position of the
+                // scrollbar may not be at the bottom of the widget anymore.
+                // That's why the scroll position is checked before actually
+                // adding the rows (AKA in the rowsAboutToBeInserted signal).
                 if (_scrollIsAtBottom)
                     scrollToBottom();
                 });
             break;
-        default: break;
+        }
+
+        default: {
+            // The connection is already disconnected. No need for handling the
+            // AutoScrollPolicyDisabled case.
+            break;
+        }
     }
 }
 
