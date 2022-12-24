@@ -35,6 +35,8 @@ jobs:
         images: |
           arsdever/ubuntu-jammy-llvm-15
           ghcr.io/${{ github.repository }}
+        tags: |
+          type=sha
 
     - name: Build and push Docker images
       uses: docker/build-push-action@v3.2.0
