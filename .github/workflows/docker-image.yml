@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -13,36 +13,60 @@ jobs:
       packages: write
       contents: read
     steps:
-    - name: Check out the repository
-      uses: actions/checkout@v3
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v2.1.0
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Check out the repository
+        uses: actions/checkout@v3
 
-    - name: Log in to the Container registry
-      uses: docker/login-action@v2.1.0
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: dorny/paths-filter@v2.11.1
+        id: changes
+        with:
+          filters: |
+            src:
+              - 'ci/docker/**'
 
-    - name: Extract metadata (tags, labels) for Docker
-      id: meta
-      uses: docker/metadata-action@v4.1.1
-      with:
-        images: |
-          arsdever/ubuntu-jammy-llvm-15
-          ghcr.io/${{ github.repository }}
-        tags: |
-          type=sha
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2.1.0
+        if: steps.changes.outputs.src == 'true'
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build and push Docker images
-      uses: docker/build-push-action@v3.2.0
-      with:
-        context: .
-        file: ci/docker/Dockerfile.base
-        push: true
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2.1.0
+        if: steps.changes.outputs.src == 'true'
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4.1.1
+        if: steps.changes.outputs.src == 'true'
+        with:
+          images: |
+            arsdever/ubuntu-jammy-llvm-15
+            ghcr.io/${{ github.repository }}
+          tags: |
+            type=sha
+
+      - name: Extract metadata (tags, labels) for Docker on main branch
+        # Only run when the PR is merged into master
+        if: |
+          github.ref == 'refs/heads/main' &&
+          github.event_name == 'push' &&
+          steps.changes.outputs.src == 'true'
+        id: meta_main
+        uses: docker/metadata-action@v4.1.1
+        with:
+          tags: |
+            type=raw,value=latest
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v3.2.0
+        if: steps.changes.outputs.src == 'true'
+        with:
+          context: .
+          file: ci/docker/Dockerfile.base
+          push: true
+          tags: ${{ steps.meta.outputs.tags }} ${{ steps.meta_main.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
