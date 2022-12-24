@@ -1,0 +1,38 @@
+name: Build Linux
+
+on:
+  workflow_run:
+    workflows: ["Docker Image CI"]
+    branches: [main]
+    types:
+      - completed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/${{ github.repository }}:latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      - name: Configure
+        run: |
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
+
+      - name: Build
+        run: |
+          cmake --build build -j
+
+      # Testing is disabled because it requires a running X server
+      # - name: Test
+      #   run: |
+      #     ctest --output-on-failure -j --test-dir build
+
+      # Not yet uploading the artifacts
+      # - name: Upload artifacts
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: linux-build
+      #     path: build
