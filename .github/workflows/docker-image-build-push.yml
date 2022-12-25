@@ -40,7 +40,7 @@ jobs:
       - name: Build and push Docker images
         if: steps.docker_image_update.outputs.src == 'true'
         run: >
-          ./ci/scripts/build.sh \
+          ./ci/scripts/docker.sh \
             build_push \
             ./ci/docker/Dockerfile.base \
             ghcr.io/${{ github.repository }} \
