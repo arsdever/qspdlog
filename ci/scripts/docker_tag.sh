@@ -7,7 +7,7 @@ set -e
 # and set the correct outputs for the step
 if [ "$GITHUB_EVENT_NAME" == "push" ] && \
 	[ "$GITHUB_REF" == "refs/heads/main" ]; then \
-	echo "::set-output tag=::latest";
+	echo "::set-output name=tag::latest";
 else
-	echo "::set-output tag=::pr-$GITHUB_REF"; \
+	echo "::set-output name=tag::pr-$GITHUB_REF"; \
 fi
