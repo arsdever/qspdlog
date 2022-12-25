@@ -3,8 +3,6 @@
 # Enable exit on error
 set -e
 
-echo "The branch name is $GITHUB_HEAD_REF"
-
 # Check if the docker image is being built on main brach
 # and set the correct outputs for the step
 if [ "$GITHUB_EVENT_NAME" == "push" ] && \
