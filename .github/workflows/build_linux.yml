@@ -2,7 +2,7 @@ name: build_linux
 
 on:
   workflow_run:
-    workflows: ["Build docker images"]
+    workflows: ["docker_image_build_push"]
     types:
       - completed
 
