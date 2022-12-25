@@ -1,4 +1,4 @@
-name: Build Linux
+name: build_linux
 
 on:
   workflow_run:

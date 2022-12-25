@@ -1,13 +1,11 @@
-name: Build docker images
+name: docker_image_delete
 
 on:
-  push:
-    branches: ["main"]
   pull_request:
-    branches: ["main"]
+    types: [closed]
 
 jobs:
-  build_docker_image:
+  delete_docker_image:
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -15,14 +13,6 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@v3
-
-      - uses: dorny/paths-filter@v2.11.1
-        id: docker_image_update
-        with:
-          filters: |
-            src:
-              - 'ci/docker/**'
-              - '.github/workflows/docker-image-build-push.yml'
 
       - name: Log in to the Container registry
         uses: docker/login-action@v2.1.0
@@ -40,8 +30,7 @@ jobs:
       - name: Build and push Docker images
         if: steps.docker_image_update.outputs.src == 'true'
         run: >
-          ./ci/scripts/docker.sh \
-            build_push \
-            ./ci/docker/Dockerfile.base \
+          ./ci/scripts/build.sh \
+            delete \
             ghcr.io/${{ github.repository }} \
             ${{ steps.meta.outputs.tag }}

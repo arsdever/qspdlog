@@ -1,0 +1,54 @@
+name: docker_image_build_push
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build_docker_image:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      - name: Set image tag to use
+        run: echo "IMAGE_TAG=latest" >> $GITHUB_ENV
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        if: steps.docker_image_update.outputs.src == 'true'
+        run: ./ci/scripts/docker_tag.sh
+
+      - name: Update image tag if the docker image was updated
+        if: steps.docker_image_update.outputs.src == 'true'
+        run: echo "IMAGE_TAG=${{ steps.meta.outputs.tag }}" >> $GITHUB_ENV
+
+      - uses: dorny/paths-filter@v2.11.1
+        id: docker_image_update
+        with:
+          filters: |
+            src:
+              - 'ci/docker/**'
+              - '.github/workflows/docker_image_build_push.yml'
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2.1.0
+        if: steps.docker_image_update.outputs.src == 'true'
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker images
+        if: steps.docker_image_update.outputs.src == 'true'
+        run: >
+          ./ci/scripts/docker.sh \
+            build_push \
+            ./ci/docker/Dockerfile.base \
+            ghcr.io/${{ github.repository }} \
+            ${{ steps.meta.outputs.tag }}
