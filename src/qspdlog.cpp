@@ -1,5 +1,7 @@
+#include <QHBoxLayout>
 #include <QLineEdit>
 #include <QScrollBar>
+#include <QTreeView>
 #include <spdlog/logger.h>
 
 #include "qspdlog/qspdlog.hpp"
@@ -10,13 +12,14 @@
 #include "qt_logger_sink.hpp"
 
 QSpdLog::QSpdLog(QWidget* parent)
-    : QTreeView(parent)
+    : QWidget(parent)
     , _sourceModel(new QSpdLogModel)
     , _proxyModel(new QSpdLogProxyModel)
+    , _view(new QTreeView)
     , _toolbar(new QSpdLogToolBar)
 {
     Q_INIT_RESOURCE(qspdlog_resources);
-    setModel(_proxyModel);
+    _view->setModel(_proxyModel);
 
     _proxyModel->setSourceModel(_sourceModel);
 
@@ -36,13 +39,17 @@ QSpdLog::QSpdLog(QWidget* parent)
         &QAbstractItemModel::rowsAboutToBeInserted,
         this,
         [ this ](const QModelIndex& parent, int first, int last) {
-        auto bar = verticalScrollBar();
+        auto bar = _view->verticalScrollBar();
         _scrollIsAtBottom = bar ? (bar->value() == bar->maximum()) : false;
         });
 
-    setRootIsDecorated(false);
+    _view->setRootIsDecorated(false);
 
     _sink = std::make_shared<qt_logger_sink_mt>(_sourceModel);
+
+    setLayout(new QHBoxLayout);
+    layout()->setContentsMargins(0, 0, 0, 0);
+    layout()->addWidget(_view);
 }
 
 QSpdLog::~QSpdLog()
@@ -88,8 +95,8 @@ void QSpdLog::updateAutoScrollPolicy(int index)
             _scrollConnection = connect(
                 _sourceModel,
                 &QSpdLogModel::rowsInserted,
-                this,
-                &QSpdLog::scrollToBottom
+                _view,
+                &QTreeView::scrollToBottom
             );
             break;
         }
@@ -106,7 +113,7 @@ void QSpdLog::updateAutoScrollPolicy(int index)
                 // That's why the scroll position is checked before actually
                 // adding the rows (AKA in the rowsAboutToBeInserted signal).
                 if (_scrollIsAtBottom)
-                    scrollToBottom();
+                    _view->scrollToBottom();
                 });
             break;
         }
@@ -120,3 +127,8 @@ void QSpdLog::updateAutoScrollPolicy(int index)
 }
 
 spdlog::sink_ptr QSpdLog::sink() { return _sink; }
+
+std::size_t QSpdLog::itemsCount() const
+{
+    return static_cast<std::size_t>(_sourceModel->rowCount());
+}

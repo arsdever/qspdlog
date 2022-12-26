@@ -28,7 +28,7 @@ private slots:
         logger->error("test");
         logger->critical("test");
 
-        QCOMPARE(widget.model()->rowCount(), 6);
+        QCOMPARE(widget.itemsCount(), 6);
     }
 
     void disconnectionOfTheSink()
@@ -40,7 +40,7 @@ private slots:
         logger->sinks().push_back(widget->sink());
         logger->flush_on(spdlog::level::trace);
         logger->info("test");
-        QCOMPARE(widget->model()->rowCount(), 1);
+        QCOMPARE(widget->itemsCount(), 1);
         widget.reset();
         logger->info("test");
         logger->flush();
@@ -55,7 +55,7 @@ private slots:
             logger->sinks().push_back(widget->sink());
             logger->flush_on(spdlog::level::trace);
             logger->info("test");
-            QCOMPARE(widget->model()->rowCount(), 1);
+            QCOMPARE(widget->itemsCount(), 1);
         }
         logger->info("test");
         logger->flush();

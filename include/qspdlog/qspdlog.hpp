@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QTreeView>
+#include <QWidget>
 
 namespace spdlog
 {
@@ -13,8 +13,9 @@ class sink;
 
 class QSpdLogModel;
 class QSpdLogProxyModel;
+class QTreeView;
 
-class QSpdLog : public QTreeView
+class QSpdLog : public QWidget
 {
 public:
     /**
@@ -61,6 +62,13 @@ public:
      */
     std::shared_ptr<spdlog::sinks::sink> sink();
 
+    /**
+     * @brief Get the number of items in the widget.
+     *
+     * @return std::size_t the number of items in the widget
+     */
+    std::size_t itemsCount() const;
+
 private slots:
     void updateFiltering();
     void updateAutoScrollPolicy(int index);
@@ -68,6 +76,7 @@ private slots:
 private:
     QSpdLogModel* _sourceModel;
     QSpdLogProxyModel* _proxyModel;
+    QTreeView* _view;
     QWidget* _toolbar;
     bool _scrollIsAtBottom;
     QMetaObject::Connection _scrollConnection;
