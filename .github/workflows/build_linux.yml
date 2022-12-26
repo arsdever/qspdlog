@@ -1,17 +1,18 @@
-name: build_linux
+name: Build and test
 
 on:
-  workflow_run:
-    workflows: [docker_image_build_push]
-    types:
-      - completed
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/${{ github.repository }}:$IMAGE_TAG
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+      image: ghcr.io/${{ github.repository }}:latest
     steps:
       - name: Check out the repository
         uses: actions/checkout@v3
