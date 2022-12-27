@@ -18,12 +18,12 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Configure
-        run: >
+        run: |
           set -e
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
 
       - name: Build
-        run: >
+        run: |
           set -e
           cmake --build build -j
 
