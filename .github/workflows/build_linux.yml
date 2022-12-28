@@ -51,4 +51,4 @@ jobs:
           cd build
           export DISPLAY=:1
           Xvfb :1 -screen 0 1024x768x24 &
-          ctest --output-on-failure --test-dir build -j
+          ctest --output-on-failure -j
