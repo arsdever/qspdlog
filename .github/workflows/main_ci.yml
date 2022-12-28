@@ -23,7 +23,7 @@ jobs:
 
       - name: Trigger the docker build workflow
         if: steps.check.outputs.docker == 'true'
-        uses: 'arsdever/qspdlog/.github/workflows/build_docker.yml'
+        uses: arsdever/qspdlog/.github/workflows/build_docker.yml@${{ github.sha }}
 
   # trigger-builds:
   #   runs-on: ubuntu-latest
