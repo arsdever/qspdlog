@@ -1,0 +1,43 @@
+name: Trigger the CI workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  trigger-docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if docker related changes were made
+        id: check
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            docker:
+              - 'ci/docker/**'
+              - '.github/workflows/build_docker.yml'
+
+      - name: Trigger the docker build workflow
+        if: steps.check.outputs.docker == 'true'
+        uses: '.github/workflows/build_docker.yml'
+
+  # trigger-builds:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check if build related changes were made
+  #       id: check
+  #       uses: dorny/paths-filter@v2
+  #       with:
+  #         filters: |
+  #           build:
+  #             - 'ci/scripts/**'
+  #             - 'ci/docker/**'
+  #             - '.github/workflows/build_linux.yml'
+
+  #     - name: Trigger the build workflow
+  #       if: steps.check.outputs.build == 'true'
+  #       uses: '.github/workflows/build_linux.yml'
