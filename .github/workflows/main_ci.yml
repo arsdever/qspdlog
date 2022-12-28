@@ -10,7 +10,7 @@ on:
 
 jobs:
   trigger-docker-build:
-    uses: arsdever/qspdlog/.github/workflows/build_docker.yml@${{ github.sha }}
+    uses: 'arsdever/qspdlog/.github/workflows/build_docker.yml@${{ github.sha }}'
     with:
       tag: latest
 
