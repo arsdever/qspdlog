@@ -9,10 +9,17 @@ on:
       - main
 
 jobs:
-  trigger-docker-build:
+  trigger_docker_build:
     uses: "./.github/workflows/build_docker.yml"
-    with:
-      tag: latest
+
+  print_docker_info:
+    needs: trigger-docker-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print info about the job being triggered
+        run: |
+          echo "DOCKER_IMAGE=${{ env.DOCKER_IMAGE }}"
+          echo "DOCKER_TAG=${{ env.DOCKER_TAG }}"
 
   # trigger-builds:
   #   runs-on: ubuntu-latest

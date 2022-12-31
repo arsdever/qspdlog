@@ -1,14 +1,12 @@
 name: Build docker image
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       tag:
+        description: "Tag to build and push with"
         required: true
-        type: string
-    # secrets:
-    #   envPAT:
-    #     required: true
+        default: "latest"
 
 jobs:
   build_and_push_docker_image:
@@ -27,15 +25,32 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Check if build related changes were made
+        id: check
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            build:
+              - 'ci/scripts/docker.sh"
+              - 'ci/docker/**'
+              - '.github/workflows/build_docker.yml'
+
+      - name: Setup environment variables related to the docker image
+        run: |
+          echo "DOCKER_IMAGE=ghcr.io/${{ github.repository }}" >> $GITHUB_ENV
+          echo "DOCKER_TAG=latest" >> $GITHUB_ENV
+          echo "DOCKER_TAG=${{ github.event_name == workflow_dispatch && github.event.inputs.tag || \
+            || steps.check.outputs.build == 'true' && $GITHUB_SHA }}" >> $GITHUB_ENV
+
       - name: Print info about the job being triggered
         run: |
-          echo "Triggered by: ${{ github.event_name }}"
-          echo "Triggered with tag: ${{ github.event.inputs.tag }}"
+          echo "DOCKER_IMAGE=${{ env.DOCKER_IMAGE }}"
+          echo "DOCKER_TAG=${{ env.DOCKER_TAG }}"
 
       - name: Build and push Docker images
         run: >
           ./ci/scripts/docker.sh
           build_push
           ./ci/docker/Dockerfile.base
-          ghcr.io/${{ github.repository }}
-          ${{ github.event.inputs.tag }}
+          ${{ env.DOCKER_IMAGE }}
+          ${{ env.DOCKER_TAG }}
