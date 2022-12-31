@@ -30,7 +30,7 @@ jobs:
       - name: Build and push Docker images
         run: >
           ./ci/scripts/docker.sh
-            build_push
-            ./ci/docker/Dockerfile.base
-            ghcr.io/${{ github.repository }}
-            ${{ github.event.inputs.tag }}
+          build_push
+          ./ci/docker/Dockerfile.base
+          ghcr.io/${{ github.repository }}
+          ${{ github.event.inputs.tag }}
