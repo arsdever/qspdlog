@@ -27,6 +27,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Print info about the job being triggered
+        run: |
+          echo "Triggered by: ${{ github.event_name }}"
+          echo "Triggered with tag: ${{ github.event.inputs.tag }}"
+
       - name: Build and push Docker images
         run: >
           ./ci/scripts/docker.sh
