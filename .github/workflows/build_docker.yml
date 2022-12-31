@@ -37,7 +37,7 @@ jobs:
         with:
           filters: |
             build:
-              - 'ci/scripts/docker.sh"
+              - 'ci/scripts/docker.sh'
               - 'ci/docker/**'
               - '.github/workflows/build_docker.yml'
 
@@ -51,7 +51,13 @@ jobs:
           echo "DOCKER_IMAGE=${{ env.DOCKER_IMAGE }}"
           echo "DOCKER_TAG=${{ env.DOCKER_TAG }}"
 
+      - name: Print the reason for skipping the job
+        if: steps.check.outputs.build != 'true'
+        run: |
+          echo "Skipping the job because no build related changes were made."
+
       - name: Build and push Docker images
+        if: steps.check.outputs.build == 'true'
         run: >
           ./ci/scripts/docker.sh
           build_push
