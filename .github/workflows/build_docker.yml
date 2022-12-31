@@ -45,7 +45,7 @@ jobs:
         run: |
           echo "DOCKER_IMAGE=ghcr.io/${{ github.repository }}" >> $GITHUB_ENV
           echo "DOCKER_TAG=latest" >> $GITHUB_ENV
-          echo "DOCKER_TAG=${{ github.event_name == workflow_dispatch && github.event.inputs.tag || \
+          echo "DOCKER_TAG=${{ (github.event_name == "workflow_dispatch" || github.event_name == "workflow_call") && github.event.inputs.tag || \
             || steps.check.outputs.build == 'true' && $GITHUB_SHA }}" >> $GITHUB_ENV
 
       - name: Print info about the job being triggered
