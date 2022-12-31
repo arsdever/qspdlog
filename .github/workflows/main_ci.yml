@@ -11,6 +11,8 @@ on:
 jobs:
   trigger_docker_build:
     uses: "./.github/workflows/build_docker.yml"
+    with:
+      tag: "latest"
 
   print_docker_info:
     needs: trigger_docker_build
