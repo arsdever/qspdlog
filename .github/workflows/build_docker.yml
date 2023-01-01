@@ -55,7 +55,7 @@ jobs:
         id: setup_output
         run: |
           echo "docker_image=ghcr.io/${{ github.repository }}" >> $GITHUB_OUTPUT
-          echo "docker_tag=${{ steps.check.outputs.build != 'true' && "latest" || inputs.tag }}" >> $GITHUB_OUTPUT
+          echo "docker_tag=${{ steps.check.outputs.build != 'true' && 'latest' || inputs.tag }}" >> $GITHUB_OUTPUT
 
       - name: Print info about the job being triggered
         run: |
