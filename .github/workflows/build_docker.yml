@@ -71,7 +71,7 @@ jobs:
       - name: Build and push Docker images
         if: steps.check.outputs.build == 'true'
         run: >
-          ./ci/scripts/docker.sh
+          ./ci/scripts/docker_build_push.sh
           ./ci/docker/Dockerfile.base
           ${{ steps.setup_output.outputs.docker_image }}
           ${{ steps.setup_output.outputs.docker_tag }}
