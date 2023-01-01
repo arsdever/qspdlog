@@ -62,7 +62,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: coverage-profile
-          path: build/test/coverage.profraw
+          path: build/test/default.profraw
 
   report_coverage:
     runs-on: ubuntu-latest
