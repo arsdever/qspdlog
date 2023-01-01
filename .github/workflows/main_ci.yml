@@ -20,8 +20,8 @@ jobs:
     steps:
       - name: Print info about the job being triggered
         run: |
-          echo "DOCKER_IMAGE=${{ env.DOCKER_IMAGE }}"
-          echo "DOCKER_TAG=${{ env.DOCKER_TAG }}"
+          echo "Docker image: ${{ needs.trigger_docker_build.outputs.image }}"
+          echo "Docker tag: ${{ needs.trigger_docker_build.outputs.tag }}"
 
   # trigger-builds:
   #   runs-on: ubuntu-latest

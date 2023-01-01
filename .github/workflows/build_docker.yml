@@ -13,6 +13,13 @@ on:
         type: string
         required: true
         default: "latest"
+    outputs:
+      image:
+        description: "The docker image that was generated"
+        value: ${{ jobs.build_and_push_docker_image.outputs.image }}
+      tag:
+        description: "The tag that the docker image was pushed with"
+        value: ${{ jobs.build_and_push_docker_image.outputs.tag }}
 
 jobs:
   build_and_push_docker_image:
@@ -20,6 +27,9 @@ jobs:
     permissions:
       packages: write
       contents: read
+    outputs:
+      image: ${{ steps.setup_output.outputs.image }}
+      tag: ${{ steps.setup_output.outputs.tag }}
     steps:
       - name: Check out the repository
         uses: actions/checkout@v3
@@ -42,14 +52,16 @@ jobs:
               - '.github/workflows/build_docker.yml'
 
       - name: Setup environment variables related to the docker image
+        id: setup_output
         run: |
-          echo "DOCKER_IMAGE=ghcr.io/${{ github.repository }}" >> $GITHUB_ENV
-          echo "DOCKER_TAG=${{ inputs.tag }}" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE=ghcr.io/${{ github.repository }}" >> $GITHUB_OUTPUT
+          echo "DOCKER_TAG=${{ inputs.tag }}" >> $GITHUB_OUTPUT
 
       - name: Print info about the job being triggered
         run: |
-          echo "DOCKER_IMAGE=${{ env.DOCKER_IMAGE }}"
-          echo "DOCKER_TAG=${{ env.DOCKER_TAG }}"
+          echo "Building and deploying the docker image:"
+          echo "\tDOCKER_IMAGE=${{ env.DOCKER_IMAGE }}"
+          echo "\tDOCKER_TAG=${{ env.DOCKER_TAG }}"
 
       - name: Print the reason for skipping the job
         if: steps.check.outputs.build != 'true'
