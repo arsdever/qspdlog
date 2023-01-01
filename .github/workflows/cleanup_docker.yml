@@ -24,7 +24,6 @@ jobs:
 
       - name: Delete Docker images
         run: >
-          ./ci/scripts/docker.sh
-          delete
-          ghcr.io/${{ github.repository }}
-          ${{ github.sha }}
+          ./ci/scripts/delete_ghcr_image_version.sh
+          ${{ secrets.GITHUB_TOKEN }}
+          pr-${{ github.event.number }}

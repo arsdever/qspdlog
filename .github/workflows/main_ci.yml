@@ -12,7 +12,8 @@ jobs:
   trigger_docker_build:
     uses: "./.github/workflows/build_docker.yml"
     with:
-      tag: ${{ github.sha }}
+      # if this is a pull request, use the pull request number as the tag, otherwise set it to "latest"
+      tag: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.number) || 'latest' }}
 
   trigger_builds:
     needs: trigger_docker_build
