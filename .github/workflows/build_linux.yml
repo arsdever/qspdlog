@@ -21,20 +21,39 @@ jobs:
 
       - name: Configure
         run: |
+          set -e
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
 
       - name: Build
         run: |
+          set -e
           cmake --build build -j
 
-      # Testing is disabled because it requires a running X server
-      - name: Test
-        run: |
-          ctest --output-on-failure -j --test-dir build
-
-      # Not yet uploading the artifacts
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: linux-build
           path: build
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    container:
+      image: ghcr.io/${{ github.repository }}:latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: linux-build
+          path: build
+
+      - name: Test
+        run: |
+          set -e
+          # https://github.com/actions/upload-artifact/issues/38
+          # TODO: remove when the issue with preserving the permissions is fixed
+          chmod +x build/test/qspdlog_test_ui
+          cd build
+          export DISPLAY=:1
+          Xvfb :1 -screen 0 1024x768x24 &
+          ctest --output-on-failure -j
