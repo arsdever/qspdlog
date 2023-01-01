@@ -1,18 +1,20 @@
 name: Build and test
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_call:
+    inputs:
+      image:
+        type: string
+        required: true
+      tag:
+        type: string
+        required: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/${{ github.repository }}:latest
+      image: ${{ inputs.image }}:${{ inputs.tag }}
     steps:
       - name: Check out the repository
         uses: actions/checkout@v3
@@ -26,13 +28,13 @@ jobs:
           cmake --build build -j
 
       # Testing is disabled because it requires a running X server
-      # - name: Test
-      #   run: |
-      #     ctest --output-on-failure -j --test-dir build
+      - name: Test
+        run: |
+          ctest --output-on-failure -j --test-dir build
 
       # Not yet uploading the artifacts
-      # - name: Upload artifacts
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: linux-build
-      #     path: build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: linux-build
+          path: build

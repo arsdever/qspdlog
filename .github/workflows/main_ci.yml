@@ -1,0 +1,22 @@
+name: Trigger the CI workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  trigger_docker_build:
+    uses: "./.github/workflows/build_docker.yml"
+    with:
+      tag: ${{ github.sha }}
+
+  trigger_builds:
+    needs: trigger_docker_build
+    uses: "./.github/workflows/build_linux.yml"
+    with:
+      image: ${{ needs.trigger_docker_build.outputs.image }}
+      tag: ${{ needs.trigger_docker_build.outputs.tag }}
