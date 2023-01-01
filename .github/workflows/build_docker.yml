@@ -60,8 +60,8 @@ jobs:
       - name: Print info about the job being triggered
         run: |
           echo "Building and deploying the docker image:"
-          echo "\tDOCKER_IMAGE=${{ env.DOCKER_IMAGE }}"
-          echo "\tDOCKER_TAG=${{ env.DOCKER_TAG }}"
+          echo "  DOCKER_IMAGE=${{ steps.setup_output.outputs.image }}}"
+          echo "  DOCKER_TAG=${{ steps.setup_output.outputs.tag }}"
 
       - name: Print the reason for skipping the job
         if: steps.check.outputs.build != 'true'
@@ -74,5 +74,5 @@ jobs:
           ./ci/scripts/docker.sh
           build_push
           ./ci/docker/Dockerfile.base
-          ${{ env.DOCKER_IMAGE }}
-          ${{ env.DOCKER_TAG }}
+          ${{ steps.setup_output.outputs.image }}
+          ${{ steps.setup_output.outputs.tag }}
