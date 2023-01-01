@@ -1,0 +1,36 @@
+# Setup variables
+ARG CLANG_VERSION=15
+
+FROM ubuntu:latest
+
+ARG CLANG_VERSION=15
+
+ENV CXX="clang++-$CLANG_VERSION"
+ENV CC="clang-$CLANG_VERSION"
+
+RUN apt update
+
+RUN apt install -y \
+		build-essential \
+		cmake \
+		git \
+		wget \
+		software-properties-common \
+		xvfb \
+	&& rm -rf /var/lib/apt/lists/*
+
+RUN apt update
+
+RUN apt install -y \
+		qt6-base-dev \
+		libgl1-mesa-dev
+
+RUN wget https://apt.llvm.org/llvm.sh && \
+	chmod +x llvm.sh && \
+	./llvm.sh $CLANG_VERSION
+
+RUN git clone https://github.com/gabime/spdlog.git && \
+	cd spdlog && \
+	git checkout v1.11.0 && \
+	cmake -B build -DCMAKE_BUILD_TYPE=Release -DSPDLOG_BUILD_EXAMPLES=OFF -DSPDLOG_BUILD_TESTS=OFF -DSPDLOG_BUILD_BENCH=OFF && \
+	cmake --build build -j --target install

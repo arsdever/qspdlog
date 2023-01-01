@@ -1,0 +1,30 @@
+name: Delete Docker images
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  cleanup_docker:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Delete Docker images
+        run: >
+          ./ci/scripts/docker.sh
+          delete
+          ghcr.io/${{ github.repository }}
+          ${{ github.sha }}
