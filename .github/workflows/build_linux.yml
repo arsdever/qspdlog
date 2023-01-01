@@ -57,3 +57,37 @@ jobs:
           export DISPLAY=:1
           Xvfb :1 -screen 0 1024x768x24 &
           ctest --output-on-failure -j
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-profile
+          path: build/test/coverage.profraw
+
+  report_coverage:
+    runs-on: ubuntu-latest
+    needs: test
+    container:
+      image: ghcr.io/${{ github.repository }}:latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage-profile
+          path: build
+
+      - name: Report coverage
+        run: |
+          set -e
+          cd build
+          llvm-profdata merge -sparse test/coverage.profraw -o test/coverage.profdata
+          llvm-cov show -instr-profile=test/coverage.profdata --format=text -o coverage.txt
+
+      - name: Upload coverage repot to codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.txt
+          flags: uitests
+          name: ${{ inputs.tag }}
+          fail_ci_if_error: true
