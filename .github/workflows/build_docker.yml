@@ -28,8 +28,8 @@ jobs:
       packages: write
       contents: read
     outputs:
-      image: ${{ steps.setup_output.outputs.image }}
-      tag: ${{ steps.setup_output.outputs.tag }}
+      image: ${{ steps.setup_output.outputs.docker_image }}
+      tag: ${{ steps.setup_output.outputs.docker_tag }}
     steps:
       - name: Check out the repository
         uses: actions/checkout@v3
@@ -54,14 +54,14 @@ jobs:
       - name: Setup environment variables related to the docker image
         id: setup_output
         run: |
-          echo "DOCKER_IMAGE=ghcr.io/${{ github.repository }}" >> $GITHUB_OUTPUT
-          echo "DOCKER_TAG=${{ inputs.tag }}" >> $GITHUB_OUTPUT
+          echo "docker_image=ghcr.io/${{ github.repository }}" >> $GITHUB_OUTPUT
+          echo "docker_tag=${{ inputs.tag }}" >> $GITHUB_OUTPUT
 
       - name: Print info about the job being triggered
         run: |
           echo "Building and deploying the docker image:"
-          echo "  DOCKER_IMAGE=${{ steps.setup_output.outputs.image }}}"
-          echo "  DOCKER_TAG=${{ steps.setup_output.outputs.tag }}"
+          echo "  docker_image=${{ steps.setup_output.outputs.docker_image }}"
+          echo "  docker_tag=${{ steps.setup_output.outputs.docker_tag }}"
 
       - name: Print the reason for skipping the job
         if: steps.check.outputs.build != 'true'
@@ -74,5 +74,5 @@ jobs:
           ./ci/scripts/docker.sh
           build_push
           ./ci/docker/Dockerfile.base
-          ${{ steps.setup_output.outputs.image }}
-          ${{ steps.setup_output.outputs.tag }}
+          ${{ steps.setup_output.outputs.docker_image }}
+          ${{ steps.setup_output.outputs.docker_tag }}
