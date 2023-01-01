@@ -15,7 +15,8 @@ jobs:
       tag: "latest"
 
   trigger_builds:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Trigger the build workflow
-        uses: './.github/workflows/build_linux.yml'
+    needs: trigger_docker_build
+    uses: "./.github/workflows/build_linux.yml"
+    with:
+      image: ${{ needs.trigger_docker_build.outputs.image }}
+      tag: ${{ needs.trigger_docker_build.outputs.tag }}
