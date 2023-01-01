@@ -14,28 +14,8 @@ jobs:
     with:
       tag: "latest"
 
-  print_docker_info:
-    needs: trigger_docker_build
+  trigger_builds:
     runs-on: ubuntu-latest
     steps:
-      - name: Print info about the job being triggered
-        run: |
-          echo "Docker image: ${{ needs.trigger_docker_build.outputs.image }}"
-          echo "Docker tag: ${{ needs.trigger_docker_build.outputs.tag }}"
-
-  # trigger-builds:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Check if build related changes were made
-  #       id: check
-  #       uses: dorny/paths-filter@v2
-  #       with:
-  #         filters: |
-  #           build:
-  #             - 'ci/scripts/**'
-  #             - 'ci/docker/**'
-  #             - '.github/workflows/build_linux.yml'
-
-  #     - name: Trigger the build workflow
-  #       if: steps.check.outputs.build == 'true'
-  #       uses: '.github/workflows/build_linux.yml'
+      - name: Trigger the build workflow
+        uses: './.github/workflows/build_linux.yml'
