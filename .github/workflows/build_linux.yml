@@ -50,6 +50,9 @@ jobs:
       - name: Test
         run: |
           set -e
+          # https://github.com/actions/upload-artifact/issues/38
+          # TODO: remove when the issue with preserving the permissions is fixed
+          chmod +x build/test/qspdlog_test_ui
           cd build
           export DISPLAY=:1
           Xvfb :1 -screen 0 1024x768x24 &
