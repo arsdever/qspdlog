@@ -1,6 +1,8 @@
 {
 	"cmake.configureArgs": [
-		"-DCMAKE_TOOLCHAIN_FILE=${env:VCPKG_DIR}/scripts/buildsystems/vcpkg.cmake"
+		"-DCMAKE_TOOLCHAIN_FILE=${env:VCPKG_DIR}/scripts/buildsystems/vcpkg.cmake",
+		"-DBUILD_TESTING=TRUE",
+		"-DBUILD_COVERAGE=TRUE"
 	],
 	"files.associations": {
 		"memory": "cpp"
