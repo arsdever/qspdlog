@@ -73,15 +73,21 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
-          name: coverage-profile
+          name: linux-build
           path: build
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage-profile
+          path: build/test
 
       - name: Report coverage
         run: |
           set -e
           cd build
           llvm-profdata-15 merge -sparse test/coverage.profraw -o test/coverage.profdata
-          llvm-cov-15 show -instr-profile=test/coverage.profdata --format=text -o coverage.txt
+          llvm-cov-15 show build/test/qspdlog_test_ui --instr-profile=test/coverage.profdata --format=text -o coverage.txt
 
       - name: Upload coverage repot to codecov
         uses: codecov/codecov-action@v3
