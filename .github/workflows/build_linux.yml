@@ -70,13 +70,13 @@ jobs:
     container:
       image: ghcr.io/${{ github.repository }}:latest
     steps:
-      - name: Download artifacts
+      - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
           name: linux-build
           path: build
 
-      - name: Download artifacts
+      - name: Download coverage profile artifacts
         uses: actions/download-artifact@v3
         with:
           name: coverage-profile
@@ -86,8 +86,8 @@ jobs:
         run: |
           set -e
           cd build
-          llvm-profdata-15 merge -sparse test/coverage.profraw -o test/coverage.profdata
-          llvm-cov-15 show build/test/qspdlog_test_ui --instr-profile=test/coverage.profdata --format=text -o coverage.txt
+          llvm-profdata-15 merge -sparse build/test/coverage.profraw -o build/test/coverage.profdata
+          llvm-cov-15 show build/test/qspdlog_test_ui --instr-profile=build/test/coverage.profdata --format=text -o coverage.txt
 
       - name: Upload coverage repot to codecov
         uses: codecov/codecov-action@v3
