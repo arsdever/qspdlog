@@ -80,8 +80,8 @@ jobs:
         run: |
           set -e
           cd build
-          llvm-profdata merge -sparse test/coverage.profraw -o test/coverage.profdata
-          llvm-cov show -instr-profile=test/coverage.profdata --format=text -o coverage.txt
+          llvm-profdata-15 merge -sparse test/coverage.profraw -o test/coverage.profdata
+          llvm-cov-15 show -instr-profile=test/coverage.profdata --format=text -o coverage.txt
 
       - name: Upload coverage repot to codecov
         uses: codecov/codecov-action@v3
