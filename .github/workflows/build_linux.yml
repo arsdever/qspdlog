@@ -89,7 +89,7 @@ jobs:
         run: |
           set -e
           llvm-profdata-15 merge -sparse build/test/default.profraw -o coverage.profdata
-          llvm-cov-15 show build/test/qspdlog_test_ui --instr-profile=coverage.profdata --format=text -o coverage.txt
+          llvm-cov-15 show build/test/qspdlog_test_ui --instr-profile=coverage.profdata > coverage.txt
 
       - name: Upload coverage repot to codecov
         uses: codecov/codecov-action@v3
