@@ -8,6 +8,8 @@ set(CMAKE_AUTOUIC ON)
 
 option(QSPDLOG_BUILD_TESTING "Option to enable/disable building the tests"
        ${BUILD_TESTING})
+option(QSPDLOG_REPORT_COVERAGE "Option to enable/disable coverage report"
+       ${BUILD_COVERAGE})
 
 # set QT version to 6 if not set already
 if("${QT_VERSION}" STREQUAL "")
@@ -24,6 +26,12 @@ find_package(spdlog REQUIRED)
 add_subdirectory(include)
 
 link_libraries(Qt::Widgets spdlog::spdlog qspdlog::interface)
+
+if(QSPDLOG_REPORT_COVERAGE)
+  message("Building with coverage report")
+  add_compile_options(-fprofile-instr-generate -fcoverage-mapping --coverage)
+  add_link_options(-fprofile-instr-generate -fcoverage-mapping --coverage)
+endif()
 
 add_subdirectory(src)
 add_subdirectory(sample)
