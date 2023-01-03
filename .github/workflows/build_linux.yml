@@ -85,9 +85,8 @@ jobs:
       - name: Report coverage
         run: |
           set -e
-          cd build
-          llvm-profdata-15 merge -sparse build/test/default.profraw -o build/test/coverage.profdata
-          llvm-cov-15 show build/test/qspdlog_test_ui --instr-profile=build/test/coverage.profdata --format=text -o coverage.txt
+          llvm-profdata-15 merge -sparse build/test/default.profraw -o coverage.profdata
+          llvm-cov-15 show build/test/qspdlog_test_ui --instr-profile=coverage.profdata --format=text -o coverage.txt
 
       - name: Upload coverage repot to codecov
         uses: codecov/codecov-action@v3
