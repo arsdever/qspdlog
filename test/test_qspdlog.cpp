@@ -1,3 +1,4 @@
+#include <QLineEdit>
 #include <QObject>
 #include <QTest>
 
@@ -59,6 +60,40 @@ private slots:
         }
         logger->info("test");
         logger->flush();
+    }
+
+    void clearLogHistory()
+    {
+        QSpdLog widget;
+        std::shared_ptr<spdlog::logger> logger =
+            std::make_shared<spdlog::logger>("test");
+
+        logger->sinks().push_back(widget.sink());
+        logger->flush_on(spdlog::level::trace);
+        logger->info("test");
+        QCOMPARE(widget.itemsCount(), 1);
+        widget.clear();
+        QCOMPARE(widget.itemsCount(), 0);
+    }
+
+    void filterMessage()
+    {
+        QSpdLog widget;
+        std::shared_ptr<spdlog::logger> logger =
+            std::make_shared<spdlog::logger>("test");
+
+        logger->sinks().push_back(widget.sink());
+        logger->flush_on(spdlog::level::trace);
+        logger->info("Lorem ipsum dolor sit amet, consectetur adipiscing elit");
+        logger->info("Another message");
+        QCOMPARE(widget.itemsCount(), 2);
+        QWidget* toolbar = widget.toolbar();
+        QTest::keyClicks(toolbar->findChild<QLineEdit*>("filterText"), "ipsum");
+        QCOMPARE(widget.itemsCount(), 1);
+        toolbar->findChild<QLineEdit*>("filterText")->setText("Another");
+        QCOMPARE(widget.itemsCount(), 1);
+        toolbar->findChild<QLineEdit*>("filterText")->setText("");
+        QCOMPARE(widget.itemsCount(), 2);
     }
 };
 

@@ -130,5 +130,5 @@ spdlog::sink_ptr QSpdLog::sink() { return _sink; }
 
 std::size_t QSpdLog::itemsCount() const
 {
-    return static_cast<std::size_t>(_sourceModel->rowCount());
+    return static_cast<std::size_t>(_proxyModel->rowCount());
 }

@@ -15,6 +15,7 @@ QSpdLogToolBar::QSpdLogToolBar(QWidget* parent)
     , _completer(new QCompleter(_completerData, this))
 {
     addWidget(_filterWidget);
+    _filterWidget->setObjectName("filterText");
 
     _caseAction = addAction("Aa");
     _caseAction->setCheckable(true);
