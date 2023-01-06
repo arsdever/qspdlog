@@ -19,6 +19,7 @@ QSpdLogToolBar::QSpdLogToolBar(QWidget* parent)
 
     _caseAction = addAction("Aa");
     _caseAction->setCheckable(true);
+    _caseAction->setObjectName("caseSensitiveAction");
 
     _regexAction = addAction(".*");
     _regexAction->setCheckable(true);

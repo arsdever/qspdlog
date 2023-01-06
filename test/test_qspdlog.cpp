@@ -1,3 +1,4 @@
+#include <QAction>
 #include <QLineEdit>
 #include <QObject>
 #include <QTest>
@@ -93,6 +94,36 @@ private slots:
         toolbar->findChild<QLineEdit*>("filterText")->setText("Another");
         QCOMPARE(widget.itemsCount(), 1);
         toolbar->findChild<QLineEdit*>("filterText")->setText("");
+        QCOMPARE(widget.itemsCount(), 2);
+    }
+
+    void filterCaseDependant()
+    {
+        QSpdLog widget;
+        std::shared_ptr<spdlog::logger> logger =
+            std::make_shared<spdlog::logger>("test");
+
+        logger->sinks().push_back(widget.sink());
+        logger->flush_on(spdlog::level::trace);
+        logger->info("Lorem ipsum dolor sit amet, consectetur adipiscing elit");
+        logger->info("Another message");
+        QCOMPARE(widget.itemsCount(), 2);
+        QWidget* toolbar = widget.toolbar();
+        toolbar->findChild<QLineEdit*>("filterText")->setText("Ipsum");
+        QCOMPARE(widget.itemsCount(), 1);
+        toolbar->findChild<QAction*>("caseSensitiveAction")->trigger();
+        QCOMPARE(widget.itemsCount(), 0);
+        toolbar->findChild<QLineEdit*>("filterText")->setText("ipsum");
+        QCOMPARE(widget.itemsCount(), 1);
+        toolbar->findChild<QLineEdit*>("filterText")->setText("nonexistent");
+        QCOMPARE(widget.itemsCount(), 0);
+        toolbar->findChild<QLineEdit*>("filterText")->setText("Ipsum");
+        QCOMPARE(widget.itemsCount(), 0);
+        toolbar->findChild<QAction*>("caseSensitiveAction")->trigger();
+        QCOMPARE(widget.itemsCount(), 1);
+        toolbar->findChild<QLineEdit*>("filterText")->setText("");
+        QCOMPARE(widget.itemsCount(), 2);
+        toolbar->findChild<QAction*>("caseSensitiveAction")->trigger();
         QCOMPARE(widget.itemsCount(), 2);
     }
 };
