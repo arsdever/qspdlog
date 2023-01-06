@@ -2,6 +2,9 @@
 
 ![QSpdLog](docs/images/demo_screenshot.png)
 
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/arsdever/qspdlog/build_linux.yml?label=linux&logo=github)
+![https://img.shields.io/codecov/c/gh/arsdever/qspdlog?flag=uitests&logo=codecov&token=7d1a74f3-709e-4b2b-9b6f-c2ed5c36d7a4](https://img.shields.io/codecov/c/gh/arsdever/qspdlog?flag=uitests&logo=codecov&token=7d1a74f3-709e-4b2b-9b6f-c2ed5c36d7a4)
+
 This repository contains the source code of a library, which provides a Qt widget for displaying log messages coming from the [spdlog](https://github.com/gabime/spdlog) library.
 
 ## Features
