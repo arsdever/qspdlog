@@ -1,6 +1,7 @@
 #include <QAction>
 #include <QLineEdit>
 #include <QObject>
+#include <QRegularExpression>
 #include <QTest>
 
 #include "qspdlog/qspdlog.hpp"
@@ -87,13 +88,17 @@ private slots:
         logger->flush_on(spdlog::level::trace);
         logger->info("Lorem ipsum dolor sit amet, consectetur adipiscing elit");
         logger->info("Another message");
+
+        QLineEdit* filterText =
+            widget.toolbar()->findChild<QLineEdit*>("filterText");
+
         QCOMPARE(widget.itemsCount(), 2);
         QWidget* toolbar = widget.toolbar();
-        QTest::keyClicks(toolbar->findChild<QLineEdit*>("filterText"), "ipsum");
+        QTest::keyClicks(filterText, "ipsum");
         QCOMPARE(widget.itemsCount(), 1);
-        toolbar->findChild<QLineEdit*>("filterText")->setText("Another");
+        filterText->setText("Another");
         QCOMPARE(widget.itemsCount(), 1);
-        toolbar->findChild<QLineEdit*>("filterText")->setText("");
+        filterText->setText("");
         QCOMPARE(widget.itemsCount(), 2);
     }
 
@@ -107,24 +112,69 @@ private slots:
         logger->flush_on(spdlog::level::trace);
         logger->info("Lorem ipsum dolor sit amet, consectetur adipiscing elit");
         logger->info("Another message");
+
+        QLineEdit* filterText =
+            widget.toolbar()->findChild<QLineEdit*>("filterText");
+        QAction* caseSensitiveAction =
+            widget.toolbar()->findChild<QAction*>("caseSensitiveAction");
+
         QCOMPARE(widget.itemsCount(), 2);
         QWidget* toolbar = widget.toolbar();
-        toolbar->findChild<QLineEdit*>("filterText")->setText("Ipsum");
+        filterText->setText("Ipsum");
         QCOMPARE(widget.itemsCount(), 1);
-        toolbar->findChild<QAction*>("caseSensitiveAction")->trigger();
+        caseSensitiveAction->trigger();
         QCOMPARE(widget.itemsCount(), 0);
-        toolbar->findChild<QLineEdit*>("filterText")->setText("ipsum");
+        filterText->setText("ipsum");
         QCOMPARE(widget.itemsCount(), 1);
-        toolbar->findChild<QLineEdit*>("filterText")->setText("nonexistent");
+        filterText->setText("nonexistent");
         QCOMPARE(widget.itemsCount(), 0);
-        toolbar->findChild<QLineEdit*>("filterText")->setText("Ipsum");
+        filterText->setText("Ipsum");
         QCOMPARE(widget.itemsCount(), 0);
-        toolbar->findChild<QAction*>("caseSensitiveAction")->trigger();
+        caseSensitiveAction->trigger();
         QCOMPARE(widget.itemsCount(), 1);
-        toolbar->findChild<QLineEdit*>("filterText")->setText("");
+        filterText->setText("");
         QCOMPARE(widget.itemsCount(), 2);
-        toolbar->findChild<QAction*>("caseSensitiveAction")->trigger();
+        caseSensitiveAction->trigger();
         QCOMPARE(widget.itemsCount(), 2);
+    }
+
+    void filterRegularExpressions()
+    {
+        QSpdLog widget;
+        std::shared_ptr<spdlog::logger> logger =
+            std::make_shared<spdlog::logger>("test");
+
+        logger->sinks().push_back(widget.sink());
+        logger->flush_on(spdlog::level::trace);
+        logger->info("Lorem ipsum dolor sit amet, consectetur adipiscing elit");
+        logger->info("Another message");
+
+        QLineEdit* filterText =
+            widget.toolbar()->findChild<QLineEdit*>("filterText");
+        QAction* regexAction =
+            widget.toolbar()->findChild<QAction*>("regexAction");
+
+        QCOMPARE(widget.itemsCount(), 2);
+        QWidget* toolbar = widget.toolbar();
+        filterText->setText("ipsum");
+        QCOMPARE(widget.itemsCount(), 1);
+        regexAction->trigger();
+        QCOMPARE(widget.itemsCount(), 1);
+        filterText->setText(".*");
+        QCOMPARE(widget.itemsCount(), 2);
+        filterText->setText(".*amet");
+        QCOMPARE(widget.itemsCount(), 1);
+        regexAction->trigger();
+        QCOMPARE(widget.itemsCount(), 0);
+        filterText->setText(".*");
+        QCOMPARE(widget.itemsCount(), 0);
+        regexAction->trigger();
+        QCOMPARE(widget.itemsCount(), 2);
+        filterText->setText("\(.*");
+        QColor color = filterText->palette().color(QPalette::Text);
+        QCOMPARE(color, Qt::red);
+        QRegularExpression re("\(.*");
+        QCOMPARE(filterText->toolTip(), re.errorString());
     }
 };
 

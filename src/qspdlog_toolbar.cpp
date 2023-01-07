@@ -23,6 +23,7 @@ QSpdLogToolBar::QSpdLogToolBar(QWidget* parent)
 
     _regexAction = addAction(".*");
     _regexAction->setCheckable(true);
+    _regexAction->setObjectName("regexAction");
 
     QComboBox* autoScrollPolicySelection = new QComboBox();
     autoScrollPolicySelection->addItems(
