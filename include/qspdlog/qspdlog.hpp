@@ -15,6 +15,16 @@ class QSpdLogModel;
 class QSpdLogProxyModel;
 class QTreeView;
 
+enum class AutoScrollPolicy {
+    AutoScrollPolicyDisabled =
+        0, // Never scroll to the bottom, leave the scrollbar where it was.
+    AutoScrollPolicyEnabled =
+        1, // Always scroll to the bottom when new rows are inserted.
+    AutoScrollPolicyEnabledIfBottom =
+        2, // Scroll to the bottom only if the scrollbar was at the bottom
+           // before inserting the new ones.
+};
+
 class QSpdLog : public QWidget
 {
 public:

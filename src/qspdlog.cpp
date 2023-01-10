@@ -20,6 +20,7 @@ QSpdLog::QSpdLog(QWidget* parent)
 {
     Q_INIT_RESOURCE(qspdlog_resources);
     _view->setModel(_proxyModel);
+    _view->setObjectName("qspdlogTreeView");
 
     _proxyModel->setSourceModel(_sourceModel);
 
@@ -85,13 +86,12 @@ void QSpdLog::updateFiltering()
 
 void QSpdLog::updateAutoScrollPolicy(int index)
 {
-    QSpdLogToolBar::AutoScrollPolicy policy =
-        static_cast<QSpdLogToolBar::AutoScrollPolicy>(index);
+    AutoScrollPolicy policy = static_cast<AutoScrollPolicy>(index);
 
     QObject::disconnect(_scrollConnection);
 
     switch (policy) {
-        case QSpdLogToolBar::AutoScrollPolicyEnabled: {
+        case AutoScrollPolicy::AutoScrollPolicyEnabled: {
             _scrollConnection = connect(
                 _sourceModel,
                 &QSpdLogModel::rowsInserted,
@@ -101,7 +101,7 @@ void QSpdLog::updateAutoScrollPolicy(int index)
             break;
         }
 
-        case QSpdLogToolBar::AutoScrollPolicyEnabledIfBottom: {
+        case AutoScrollPolicy::AutoScrollPolicyEnabledIfBottom: {
             _scrollConnection = connect(
                 _sourceModel,
                 &QSpdLogModel::rowsInserted,

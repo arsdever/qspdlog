@@ -19,16 +19,6 @@ public:
         bool isCaseSensitive;     // Whether the filtering is case sensitive.
     };
 
-    enum AutoScrollPolicy {
-        AutoScrollPolicyDisabled =
-            0, // Never scroll to the bottom, leave the scrollbar where it was.
-        AutoScrollPolicyEnabled =
-            1, // Always scroll to the bottom when new rows are inserted.
-        AutoScrollPolicyEnabledIfBottom =
-            2, // Scroll to the bottom only if the scrollbar was at the bottom
-               // before inserting the new ones.
-    };
-
 public:
     QSpdLogToolBar(QWidget* parent = nullptr);
     ~QSpdLogToolBar();

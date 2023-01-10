@@ -26,6 +26,7 @@ QSpdLogToolBar::QSpdLogToolBar(QWidget* parent)
     _regexAction->setObjectName("regexAction");
 
     QComboBox* autoScrollPolicySelection = new QComboBox();
+    autoScrollPolicySelection->setObjectName("autoScrollPolicySelection");
     autoScrollPolicySelection->addItems(
         { "Manual Scroll", "Scroll To Bottom", "Smart Scroll" }
     );
