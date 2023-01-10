@@ -5,6 +5,7 @@
 #include <QRegularExpression>
 #include <QScrollArea>
 #include <QScrollBar>
+#include <QSettings>
 #include <QTest>
 #include <QTreeView>
 
@@ -82,7 +83,7 @@ private slots:
         QCOMPARE(widget.itemsCount(), 0);
     }
 
-    void filterMessage()
+    void filterMessageAndCompletionHistory()
     {
         QSpdLog widget;
         std::shared_ptr<spdlog::logger> logger =
@@ -95,15 +96,30 @@ private slots:
 
         QLineEdit* filterText =
             widget.toolbar()->findChild<QLineEdit*>("filterText");
+        QAction* clearHistory =
+            widget.toolbar()->findChild<QAction*>("clearHistoryAction");
 
         QCOMPARE(widget.itemsCount(), 2);
         QWidget* toolbar = widget.toolbar();
         QTest::keyClicks(filterText, "ipsum");
+        QTest::keyClick(filterText, Qt::Key_Enter);
         QCOMPARE(widget.itemsCount(), 1);
         filterText->setText("Another");
         QCOMPARE(widget.itemsCount(), 1);
         filterText->setText("");
+        QTest::keyClick(filterText, Qt::Key_Enter);
         QCOMPARE(widget.itemsCount(), 2);
+        QStringList completerHistory =
+            QSettings("./qspdlog_filter_history", QSettings::NativeFormat)
+                .value("completerHistory")
+                .toStringList();
+        QCOMPARE(completerHistory, QStringList("ipsum"));
+        clearHistory->trigger();
+        completerHistory =
+            QSettings("./qspdlog_filter_history", QSettings::NativeFormat)
+                .value("completerHistory")
+                .toStringList();
+        QCOMPARE(completerHistory, QStringList());
     }
 
     void filterCaseDependant()

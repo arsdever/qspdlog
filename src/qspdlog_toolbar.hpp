@@ -39,6 +39,7 @@ private:
     QWidget* _filterWidget;
     QAction* _caseAction;
     QAction* _regexAction;
+    QAction* _clearHistory;
     QAbstractItemModel* _completerData;
     QCompleter* _completer;
 };

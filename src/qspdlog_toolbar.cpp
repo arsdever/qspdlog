@@ -11,6 +11,7 @@
 QSpdLogToolBar::QSpdLogToolBar(QWidget* parent)
     : QToolBar(parent)
     , _filterWidget(new QLineEdit(this))
+    , _clearHistory(new QAction("Clear History", this))
     , _completerData(new QStringListModel(this))
     , _completer(new QCompleter(_completerData, this))
 {
@@ -24,6 +25,8 @@ QSpdLogToolBar::QSpdLogToolBar(QWidget* parent)
     _regexAction = addAction(".*");
     _regexAction->setCheckable(true);
     _regexAction->setObjectName("regexAction");
+
+    _clearHistory->setObjectName("clearHistoryAction");
 
     QComboBox* autoScrollPolicySelection = new QComboBox();
     autoScrollPolicySelection->setObjectName("autoScrollPolicySelection");
@@ -74,6 +77,9 @@ QSpdLogToolBar::QSpdLogToolBar(QWidget* parent)
         this,
         &QSpdLogToolBar::checkInputValidity
     );
+    connect(
+        _clearHistory, &QAction::triggered, this, &QSpdLogToolBar::clearCompleterHistory
+    );
     loadCompleterHistory();
 }
 
@@ -120,11 +126,11 @@ void QSpdLogToolBar::clearCompleterHistory()
 void QSpdLogToolBar::loadCompleterHistory()
 {
     QStringListModel* model = static_cast<QStringListModel*>(_completerData);
-    model->setStringList(QSettings().value("completerHistory").toStringList());
+    model->setStringList(QSettings("./qspdlog_filter_history", QSettings::NativeFormat).value("completerHistory").toStringList());
 }
 
 void QSpdLogToolBar::saveCompleterHistory()
 {
     QStringListModel* model = static_cast<QStringListModel*>(_completerData);
-    QSettings().setValue("completerHistory", model->stringList());
+    QSettings("./qspdlog_filter_history", QSettings::NativeFormat).setValue("completerHistory", model->stringList());
 }
