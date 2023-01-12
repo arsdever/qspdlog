@@ -14,6 +14,7 @@ class sink;
 class QSpdLogModel;
 class QSpdLogProxyModel;
 class QTreeView;
+class QAbstractSpdLogToolBar;
 
 enum class AutoScrollPolicy {
     AutoScrollPolicyDisabled =
@@ -50,17 +51,25 @@ public:
     void clear();
 
     /**
-     * @brief Get the toolbar widget.
+     * @brief Register a toolbar.
      *
-     * The toolbar widget is constructed by the QSpdLog class and has all the
-     * required connections already set up.
+     * The toolbar will be set up for the current instance. Being set up means
+     * - all the actions from the toolbar will affect current instance
+     * - the changes to one toolbar will be reflected in the other ones as well
      *
-     * The toolbar provides the controls for setting up the auto-scroll policy
-     * and tools for filtering the messages.
-     *
-     * @return the toolbar widget
+     * @param toolbar the toolbar
      */
-    QWidget* toolbar() const;
+    void registerToolbar(QAbstractSpdLogToolBar* toolbar);
+
+    /**
+     * @brief Remove a toolbar.
+     *
+     * The toolbar will be removed from the current instance. The toolbar will
+     * not be deleted.
+     *
+     * @param toolbar the toolbar
+     */
+    void removeToolbar(QAbstractSpdLogToolBar* toolbar);
 
     /**
      * @brief Get the sink.
@@ -80,15 +89,17 @@ public:
     std::size_t itemsCount() const;
 
 private slots:
-    void updateFiltering();
+    void filterData(
+        const QString& text, bool isRegularExpression, bool isCaseSensitive
+    );
     void updateAutoScrollPolicy(int index);
 
 private:
     QSpdLogModel* _sourceModel;
     QSpdLogProxyModel* _proxyModel;
     QTreeView* _view;
-    QWidget* _toolbar;
     bool _scrollIsAtBottom;
     QMetaObject::Connection _scrollConnection;
     std::shared_ptr<spdlog::sinks::sink> _sink;
+    std::list<QAbstractSpdLogToolBar*> _toolbars;
 };
