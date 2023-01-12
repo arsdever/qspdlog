@@ -2,13 +2,17 @@
 
 #include <QToolBar>
 
+#include "qspdlog/qabstract_spdlog_toolbar.hpp"
+
 class QWidget;
 class QAction;
 class QCompleter;
 class QAbstractItemModel;
 class QSettings;
 
-class QSpdLogToolBar : public QToolBar
+class QSpdLogToolBar
+    : public QToolBar
+    , public QAbstractSpdLogToolBar
 {
     Q_OBJECT
 
@@ -22,6 +26,13 @@ public:
 public:
     QSpdLogToolBar(QWidget* parent = nullptr);
     ~QSpdLogToolBar();
+
+#pragma region QAbstractSpdLogToolBar
+    QLineEdit* filter() override;
+    QAction* caseSensitive() override;
+    QAction* regex() override;
+    QComboBox* autoScrollPolicy() override;
+#pragma endregion
 
     FilteringSettings filteringSettings() const;
     void checkInputValidity();
@@ -40,6 +51,7 @@ private:
     QAction* _caseAction;
     QAction* _regexAction;
     QAction* _clearHistory;
+    QComboBox* _autoScrollPolicy;
     QAbstractItemModel* _completerData;
     QCompleter* _completer;
 };
