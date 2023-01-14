@@ -99,6 +99,8 @@ QAction* QSpdLogToolBar::caseSensitive() { return _caseAction; }
 
 QAction* QSpdLogToolBar::regex() { return _regexAction; }
 
+QAction* QSpdLogToolBar::clearHistory() { return _clearHistory; }
+
 QComboBox* QSpdLogToolBar::autoScrollPolicy() { return _autoScrollPolicy; }
 
 #pragma endregion

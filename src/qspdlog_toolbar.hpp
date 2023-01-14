@@ -31,6 +31,7 @@ public:
     QLineEdit* filter() override;
     QAction* caseSensitive() override;
     QAction* regex() override;
+    QAction* clearHistory() override;
     QComboBox* autoScrollPolicy() override;
 #pragma endregion
 
