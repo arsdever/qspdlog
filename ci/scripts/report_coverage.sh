@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 cmake -S . -B build/coverage -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -DQSPDLOG_REPORT_COVERAGE=ON $@
 cmake --build build/coverage -j
 ctest --test-dir build/coverage --output-on-failure -j

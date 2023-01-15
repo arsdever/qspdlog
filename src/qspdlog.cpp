@@ -1,3 +1,5 @@
+#include <QAction>
+#include <QComboBox>
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <QScrollBar>
@@ -6,9 +8,9 @@
 
 #include "qspdlog/qspdlog.hpp"
 
+#include "qspdlog/qabstract_spdlog_toolbar.hpp"
 #include "qspdlog_model.hpp"
 #include "qspdlog_proxy_model.hpp"
-#include "qspdlog_toolbar.hpp"
 #include "qt_logger_sink.hpp"
 
 QSpdLog::QSpdLog(QWidget* parent)
@@ -16,7 +18,6 @@ QSpdLog::QSpdLog(QWidget* parent)
     , _sourceModel(new QSpdLogModel)
     , _proxyModel(new QSpdLogProxyModel)
     , _view(new QTreeView)
-    , _toolbar(new QSpdLogToolBar)
 {
     Q_INIT_RESOURCE(qspdlog_resources);
     _view->setModel(_proxyModel);
@@ -24,17 +25,6 @@ QSpdLog::QSpdLog(QWidget* parent)
 
     _proxyModel->setSourceModel(_sourceModel);
 
-    QSpdLogToolBar* toolbar = static_cast<QSpdLogToolBar*>(_toolbar);
-
-    connect(
-        toolbar, &QSpdLogToolBar::filterChanged, this, &QSpdLog::updateFiltering
-    );
-    connect(
-        toolbar,
-        &QSpdLogToolBar::autoScrollPolicyChanged,
-        this,
-        &QSpdLog::updateAutoScrollPolicy
-    );
     connect(
         _sourceModel,
         &QAbstractItemModel::rowsAboutToBeInserted,
@@ -60,27 +50,58 @@ QSpdLog::~QSpdLog()
 
 void QSpdLog::clear() { _sourceModel->clear(); }
 
-QWidget* QSpdLog::toolbar() const { return _toolbar; }
-
-void QSpdLog::updateFiltering()
+void QSpdLog::registerToolbar(QAbstractSpdLogToolBar* toolbarInterface)
 {
-    QSpdLogToolBar* toolbar = static_cast<QSpdLogToolBar*>(_toolbar);
+    toolbarInterface->setParent(this);
+    _toolbars.push_back(toolbarInterface);
 
-    QSpdLogToolBar::FilteringSettings settings = toolbar->filteringSettings();
+    QLineEdit* filter = toolbarInterface->filter();
+    QAction* regex = toolbarInterface->regex();
+    QAction* caseSensitive = toolbarInterface->caseSensitive();
+    QComboBox* autoScrollPolicyCombo = toolbarInterface->autoScrollPolicy();
 
+    auto updateFilter = [ this, filter, regex, caseSensitive ]() {
+        filterData(
+            filter->text(), regex->isChecked(), caseSensitive->isChecked()
+        );
+    };
+
+    connect(filter, &QLineEdit::textChanged, this, updateFilter);
+    connect(regex, &QAction::toggled, this, updateFilter);
+    connect(caseSensitive, &QAction::toggled, this, updateFilter);
+    connect(
+        autoScrollPolicyCombo,
+        QOverload<int>::of(&QComboBox::currentIndexChanged),
+        this,
+        &QSpdLog::updateAutoScrollPolicy
+    );
+}
+
+void QSpdLog::removeToolbar(QAbstractSpdLogToolBar* toolbarInterface)
+{
+    _toolbars.erase(
+        std::remove(_toolbars.begin(), _toolbars.end(), toolbarInterface),
+        _toolbars.end()
+    );
+}
+
+void QSpdLog::filterData(
+    const QString& text, bool isRegularExpression, bool isCaseSensitive
+)
+{
     _proxyModel->setFilterCaseSensitivity(
-        settings.isCaseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive
+        isCaseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive
     );
 
-    if (settings.isRegularExpression) {
-        QRegularExpression regex(settings.text);
+    if (isRegularExpression) {
+        QRegularExpression regex(text);
 
         if (!regex.isValid())
             return;
 
-        _proxyModel->setFilterRegularExpression(settings.text);
+        _proxyModel->setFilterRegularExpression(text);
     } else {
-        _proxyModel->setFilterFixedString(settings.text);
+        _proxyModel->setFilterFixedString(text);
     }
 }
 

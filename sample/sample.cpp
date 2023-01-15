@@ -6,6 +6,7 @@
 #include <QToolBar>
 #include <QToolButton>
 
+#include "qspdlog/qabstract_spdlog_toolbar.hpp"
 #include "qspdlog/qspdlog.hpp"
 #include "spdlog/spdlog.h"
 
@@ -106,7 +107,10 @@ int main(int argc, char** argv)
     QSpdLog log;
     log.show();
     log.move(toolbar.pos() + QPoint(0, toolbar.height() + 50));
-    log.toolbar()->show();
+
+    QAbstractSpdLogToolBar* logToolbar = createToolBar();
+    log.registerToolbar(logToolbar);
+    dynamic_cast<QWidget*>(logToolbar)->show();
 
     logger->sinks().push_back(log.sink());
 
