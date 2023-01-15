@@ -116,7 +116,26 @@ private slots:
         QCOMPARE(widget.itemsCount(), 0);
     }
 
-    void filterMessageAndCompletionHistory()
+    void runToolbarTests()
+    {
+        std::vector<std::unique_ptr<QAbstractSpdLogToolBar>> toolbars;
+        toolbars.push_back(std::make_unique<QTestToolBar>());
+        toolbars.push_back(
+            std::unique_ptr<QAbstractSpdLogToolBar>(createToolBar())
+        );
+
+        for (auto& toolbar : toolbars) {
+            filterMessageAndCompletionHistory(toolbar.get());
+            filterCaseDependant(toolbar.get());
+            filterRegularExpressions(toolbar.get());
+            autoScrollPolicyDefault(toolbar.get());
+            autoScrollPolicyAutoScroll(toolbar.get());
+            autoScrollPolicySmartScroll(toolbar.get());
+            toolbar->setParent(nullptr);
+        }
+    }
+
+    void filterMessageAndCompletionHistory(QAbstractSpdLogToolBar* toolbar)
     {
         QSpdLog widget;
         std::shared_ptr<spdlog::logger> logger =
@@ -126,10 +145,7 @@ private slots:
         logger->flush_on(spdlog::level::trace);
         logger->info("Lorem ipsum dolor sit amet, consectetur adipiscing elit");
         logger->info("Another message");
-
-        // setup the toolbar
-        auto toolbar = std::make_unique<QTestToolBar>();
-        widget.registerToolbar(toolbar.get());
+        widget.registerToolbar(toolbar);
 
         QCOMPARE(widget.itemsCount(), 2);
         QTest::keyClicks(toolbar->filter(), "ipsum");
@@ -142,7 +158,7 @@ private slots:
         QCOMPARE(widget.itemsCount(), 2);
     }
 
-    void filterCaseDependant()
+    void filterCaseDependant(QAbstractSpdLogToolBar* toolbar)
     {
         QSpdLog widget;
         std::shared_ptr<spdlog::logger> logger =
@@ -152,10 +168,7 @@ private slots:
         logger->flush_on(spdlog::level::trace);
         logger->info("Lorem ipsum dolor sit amet, consectetur adipiscing elit");
         logger->info("Another message");
-
-        // setup the toolbar
-        auto toolbar = std::make_unique<QTestToolBar>();
-        widget.registerToolbar(toolbar.get());
+        widget.registerToolbar(toolbar);
 
         QLineEdit* filter = toolbar->filter();
         QAction* caseSensitive = toolbar->caseSensitive();
@@ -179,7 +192,7 @@ private slots:
         QCOMPARE(widget.itemsCount(), 2);
     }
 
-    void filterRegularExpressions()
+    void filterRegularExpressions(QAbstractSpdLogToolBar* toolbar)
     {
         QSpdLog widget;
         std::shared_ptr<spdlog::logger> logger =
@@ -189,10 +202,7 @@ private slots:
         logger->flush_on(spdlog::level::trace);
         logger->info("Lorem ipsum dolor sit amet, consectetur adipiscing elit");
         logger->info("Another message");
-
-        // setup the toolbar
-        auto toolbar = std::make_unique<QTestToolBar>();
-        widget.registerToolbar(toolbar.get());
+        widget.registerToolbar(toolbar);
 
         QLineEdit* filter = toolbar->filter();
         QAction* regex = toolbar->regex();
@@ -212,15 +222,14 @@ private slots:
         QCOMPARE(widget.itemsCount(), 0);
         regex->trigger();
         QCOMPARE(widget.itemsCount(), 2);
-        // TODO: base implementation of the toolbar should change the color of the invalid regex text
-        // filter->setText("\(.*");
-        // QColor color = filter->palette().color(QPalette::Text);
-        // QCOMPARE(color, Qt::red);
+        // TODO: base implementation of the toolbar should change the color of
+        // the invalid regex text filter->setText("\(.*"); QColor color =
+        // filter->palette().color(QPalette::Text); QCOMPARE(color, Qt::red);
         // QRegularExpression re("\(.*");
         // QCOMPARE(filter->toolTip(), re.errorString());
     }
 
-    void autoScrollPolicyDefault()
+    void autoScrollPolicyDefault(QAbstractSpdLogToolBar* toolbar)
     {
         QSpdLog widget;
         std::shared_ptr<spdlog::logger> logger =
@@ -229,10 +238,7 @@ private slots:
         logger->sinks().push_back(widget.sink());
         logger->set_level(spdlog::level::trace);
         logger->flush_on(spdlog::level::trace);
-
-        // setup the toolbar
-        auto toolbar = std::make_unique<QTestToolBar>();
-        widget.registerToolbar(toolbar.get());
+        widget.registerToolbar(toolbar);
 
         QComboBox* autoScrollPolicy = toolbar->autoScrollPolicy();
         QTreeView* treeView = widget.findChild<QTreeView*>("qspdlogTreeView");
@@ -256,7 +262,7 @@ private slots:
         QVERIFY(actualValue != maximumValue);
     }
 
-    void autoScrollPolicyAutoScroll()
+    void autoScrollPolicyAutoScroll(QAbstractSpdLogToolBar* toolbar)
     {
         QSpdLog widget;
         std::shared_ptr<spdlog::logger> logger =
@@ -265,15 +271,11 @@ private slots:
         logger->sinks().push_back(widget.sink());
         logger->set_level(spdlog::level::trace);
         logger->flush_on(spdlog::level::trace);
-
-        // setup the toolbar
-        auto toolbar = std::make_unique<QTestToolBar>();
-        widget.registerToolbar(toolbar.get());
+        widget.registerToolbar(toolbar);
 
         QComboBox* autoScrollPolicy = toolbar->autoScrollPolicy();
-        QTreeView* treeView =
-        widget.findChild<QTreeView*>("qspdlogTreeView"); QScrollBar*
-        scrollBar = treeView->verticalScrollBar();
+        QTreeView* treeView = widget.findChild<QTreeView*>("qspdlogTreeView");
+        QScrollBar* scrollBar = treeView->verticalScrollBar();
 
         treeView->resize(100, 100);
 
@@ -293,7 +295,7 @@ private slots:
         QCOMPARE(scrollBar->value(), scrollBar->maximum());
     }
 
-    void autoScrollPolicySmartScroll()
+    void autoScrollPolicySmartScroll(QAbstractSpdLogToolBar* toolbar)
     {
         QSpdLog widget;
         std::shared_ptr<spdlog::logger> logger =
@@ -302,15 +304,11 @@ private slots:
         logger->sinks().push_back(widget.sink());
         logger->set_level(spdlog::level::trace);
         logger->flush_on(spdlog::level::trace);
-
-        // setup the toolbar
-        auto toolbar = std::make_unique<QTestToolBar>();
-        widget.registerToolbar(toolbar.get());
+        widget.registerToolbar(toolbar);
 
         QComboBox* autoScrollPolicy = toolbar->autoScrollPolicy();
-        QTreeView* treeView =
-        widget.findChild<QTreeView*>("qspdlogTreeView"); QScrollBar*
-        scrollBar = treeView->verticalScrollBar();
+        QTreeView* treeView = widget.findChild<QTreeView*>("qspdlogTreeView");
+        QScrollBar* scrollBar = treeView->verticalScrollBar();
 
         treeView->resize(100, 100);
 

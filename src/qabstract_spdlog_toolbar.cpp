@@ -3,8 +3,10 @@
 
 QAbstractSpdLogToolBar::~QAbstractSpdLogToolBar()
 {
-    _parent->removeToolbar(this);
-    _parent = nullptr;
+    if (_parent) {
+        _parent->removeToolbar(this);
+        _parent = nullptr;
+    }
 }
 
 void QAbstractSpdLogToolBar::setParent(QSpdLog* parent) { _parent = parent; }
