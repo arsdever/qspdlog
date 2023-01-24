@@ -87,6 +87,13 @@ public:
      * @return std::size_t the number of items in the widget
      */
     std::size_t itemsCount() const;
+    
+    /**
+     * @brief Get the maximum amount of items in the widget.
+     *
+     * @return int the maximum number of items in the widget
+     */
+    int maxEntries() const;
 
 private slots:
     void filterData(

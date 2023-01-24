@@ -42,6 +42,11 @@ void QSpdLogModel::addEntry(entry_t entry)
     endInsertRows();
 }
 
+int QSpdLogModel::getMaxEntries() const
+{
+    return _maxEntries;
+}
+
 void QSpdLogModel::clear()
 {
     beginResetModel();

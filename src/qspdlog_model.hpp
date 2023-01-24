@@ -19,6 +19,8 @@ public:
 
     void addEntry(entry_t entry);
     void clear();
+    
+    int getMaxEntries() const;
 
 #pragma region QAbstractListModel
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
