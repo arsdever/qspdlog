@@ -1,0 +1,67 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"sample/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"id" : "qspdlog_interface::@14b3099d61bfdbeae804"
+		},
+		{
+			"id" : "qspdlog_lib::@145eef247bfb46b6828c"
+		}
+	],
+	"id" : "qspdlog_sample_autogen_timestamp_deps::@f68f564e181663381ef6",
+	"isGeneratorProvided" : true,
+	"name" : "qspdlog_sample_autogen_timestamp_deps",
+	"paths" : 
+	{
+		"build" : "sample",
+		"source" : "sample"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "cmake-build-debug/sample/CMakeFiles/qspdlog_sample_autogen_timestamp_deps",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "cmake-build-debug/sample/CMakeFiles/qspdlog_sample_autogen_timestamp_deps.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

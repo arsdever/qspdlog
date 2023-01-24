@@ -13,9 +13,9 @@
 #include "qspdlog_proxy_model.hpp"
 #include "qt_logger_sink.hpp"
 
-QSpdLog::QSpdLog(QWidget* parent, int maxEntries)
+QSpdLog::QSpdLog(QWidget* parent)
     : QWidget(parent)
-    , _sourceModel(new QSpdLogModel(nullptr, maxEntries))
+    , _sourceModel(new QSpdLogModel)
     , _proxyModel(new QSpdLogProxyModel)
     , _view(new QTreeView)
 {
@@ -154,7 +154,10 @@ std::size_t QSpdLog::itemsCount() const
     return static_cast<std::size_t>(_proxyModel->rowCount());
 }
 
-int QSpdLog::maxEntries() const
+std::optional<int> QSpdLog::getMaxEntries() const
 {
   return _sourceModel->getMaxEntries();
+}
+void QSpdLog::setMaxEntries(std::optional<int> maxEntries) {
+  _sourceModel->setMaxEntries(maxEntries);
 }

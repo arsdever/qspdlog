@@ -1,0 +1,15 @@
+# ninja log v5
+0	127	1674582793651182891	src/qspdlog_lib_autogen/timestamp	579a1e2e91e650ad
+0	127	1674582793651182891	src/qspdlog_lib_autogen/mocs_compilation.cpp	579a1e2e91e650ad
+0	127	1674582793651182891	/home/patrick/Dokumente/qspdlog/cmake-build-debug/src/qspdlog_lib_autogen/timestamp	579a1e2e91e650ad
+0	127	1674582793651182891	/home/patrick/Dokumente/qspdlog/cmake-build-debug/src/qspdlog_lib_autogen/mocs_compilation.cpp	579a1e2e91e650ad
+127	131	1674582793655182862	src/qspdlog_lib_autogen/EWIEGA46WW/qrc_qspdlog_resources.cpp	9cd508511d96d2e7
+127	131	1674582793655182862	/home/patrick/Dokumente/qspdlog/cmake-build-debug/src/qspdlog_lib_autogen/EWIEGA46WW/qrc_qspdlog_resources.cpp	9cd508511d96d2e7
+131	149	1674582793675182717	src/CMakeFiles/qspdlog_lib.dir/qspdlog_lib_autogen/EWIEGA46WW/qrc_qspdlog_resources.cpp.o	889e044c1f50bfc2
+131	1073	1674582794599176055	src/CMakeFiles/qspdlog_lib.dir/qspdlog_proxy_model.cpp.o	ad2dad31bdfea01f
+131	1154	1674582794679175478	src/CMakeFiles/qspdlog_lib.dir/qabstract_spdlog_toolbar.cpp.o	93e050a7268a79d9
+131	1294	1674582794819174467	src/CMakeFiles/qspdlog_lib.dir/qspdlog_lib_autogen/mocs_compilation.cpp.o	e3f8a320fb60a898
+131	1408	1674582794931173660	src/CMakeFiles/qspdlog_lib.dir/qspdlog_toolbar.cpp.o	381b2061d899974a
+131	1430	1674582794955173488	src/CMakeFiles/qspdlog_lib.dir/qspdlog_model.cpp.o	344c0c68a337263b
+131	1602	1674582795127172248	src/CMakeFiles/qspdlog_lib.dir/qspdlog.cpp.o	763ecf40e3a9c8a6
+1602	1625	1674582795151172075	src/libqspdlog_lib.a	429f59f45fa038be

@@ -1,0 +1,162 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3
+					],
+					"jsonFile" : "directory-.-Release-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "include",
+					"jsonFile" : "directory-include-Release-7ead17b99bffc88b66bb.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "include",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "src",
+					"jsonFile" : "directory-src-Release-b6cf2213fc5053b67c22.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "src",
+					"targetIndexes" : 
+					[
+						1,
+						2,
+						3
+					]
+				},
+				{
+					"build" : "sample",
+					"jsonFile" : "directory-sample-Release-7aef86e15b8d60915f51.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "sample",
+					"targetIndexes" : 
+					[
+						4,
+						5,
+						6
+					]
+				}
+			],
+			"name" : "Release",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					],
+					"name" : "qspdlog",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 1,
+					"id" : "qspdlog_interface::@14b3099d61bfdbeae804",
+					"jsonFile" : "target-qspdlog_interface-Release-9ac06e7295b67468b7e4.json",
+					"name" : "qspdlog_interface",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "qspdlog_lib::@145eef247bfb46b6828c",
+					"jsonFile" : "target-qspdlog_lib-Release-0898098fcde76df7c11a.json",
+					"name" : "qspdlog_lib",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "qspdlog_lib_autogen::@145eef247bfb46b6828c",
+					"jsonFile" : "target-qspdlog_lib_autogen-Release-75f8c5532b9059c16838.json",
+					"name" : "qspdlog_lib_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "qspdlog_lib_autogen_timestamp_deps::@145eef247bfb46b6828c",
+					"jsonFile" : "target-qspdlog_lib_autogen_timestamp_deps-Release-b8dcbca2dc8b82379ebe.json",
+					"name" : "qspdlog_lib_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "qspdlog_sample::@f68f564e181663381ef6",
+					"jsonFile" : "target-qspdlog_sample-Release-fd53f30edefddbdc995a.json",
+					"name" : "qspdlog_sample",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "qspdlog_sample_autogen::@f68f564e181663381ef6",
+					"jsonFile" : "target-qspdlog_sample_autogen-Release-53cbac9e156fafefd9ca.json",
+					"name" : "qspdlog_sample_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "qspdlog_sample_autogen_timestamp_deps::@f68f564e181663381ef6",
+					"jsonFile" : "target-qspdlog_sample_autogen_timestamp_deps-Release-fa7810cdce42b8065499.json",
+					"name" : "qspdlog_sample_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/patrick/Dokumente/qspdlog/cmake-build-release",
+		"source" : "/home/patrick/Dokumente/qspdlog"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 4
+	}
+}

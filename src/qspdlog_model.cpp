@@ -22,9 +22,8 @@ static constexpr std::array<const char*, 3> column_names = { "Level",
 
 } // namespace
 
-QSpdLogModel::QSpdLogModel(QObject* parent, int maxEntries)
+QSpdLogModel::QSpdLogModel(QObject* parent)
     : QAbstractListModel(parent)
-    , _maxEntries(maxEntries)
 {
 }
 
@@ -32,7 +31,8 @@ void QSpdLogModel::addEntry(entry_t entry)
 {
     if(_maxEntries > 0 && _items.size() > _maxEntries) {
         beginRemoveRows(QModelIndex(), 0, 0);
-        _items.erase(_items.begin());
+        //_items.erase(_items.begin());
+        _items.pop_front();
         endRemoveRows();
     }
 
@@ -43,7 +43,7 @@ void QSpdLogModel::addEntry(entry_t entry)
     endInsertRows();
 }
 
-int QSpdLogModel::getMaxEntries() const
+std::optional<int> QSpdLogModel::getMaxEntries() const
 {
     return _maxEntries;
 }
@@ -125,4 +125,7 @@ QVariant QSpdLogModel::headerData(
         return QString(column_names[ section ]);
 
     return QVariant();
+}
+void QSpdLogModel::setMaxEntries(std::optional<int> maxEntries) {
+    _maxEntries = maxEntries;
 }

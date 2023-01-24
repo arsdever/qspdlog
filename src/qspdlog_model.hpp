@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QAbstractListModel>
+#include <deque>
 
 class QSpdLogModel : public QAbstractListModel
 {
@@ -14,13 +15,14 @@ public:
     };
 
 public:
-    QSpdLogModel(QObject* parent = nullptr, int maxEntries=0);
+    QSpdLogModel(QObject* parent = nullptr);
     ~QSpdLogModel() override = default;
 
     void addEntry(entry_t entry);
     void clear();
     
-    int getMaxEntries() const;
+    std::optional<int> getMaxEntries() const;
+    void setMaxEntries(std::optional<int> maxEntries);
 
 #pragma region QAbstractListModel
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
@@ -33,6 +35,8 @@ public:
 #pragma endregion
 
 private:
-    std::vector<entry_t> _items;
-    int _maxEntries;
+    //std::vector<entry_t> _items;
+    std::deque<entry_t> _items;
+    //int _maxEntries;
+    std::optional<int> _maxEntries;
 };

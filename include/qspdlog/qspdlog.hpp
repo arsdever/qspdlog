@@ -34,7 +34,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit QSpdLog(QWidget* parent = nullptr, int maxEntries=0);
+    explicit QSpdLog(QWidget* parent = nullptr);
 
     /**
      * @brief Destructor
@@ -93,7 +93,8 @@ public:
      *
      * @return int the maximum number of items in the widget
      */
-    int maxEntries() const;
+    std::optional<int> getMaxEntries() const;
+    void setMaxEntries(std::optional<int> maxEntries);
 
 private slots:
     void filterData(
