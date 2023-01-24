@@ -93,8 +93,8 @@ public:
      *
      * @return int the maximum number of items in the widget
      */
-    std::optional<int> getMaxEntries() const;
-    void setMaxEntries(std::optional<int> maxEntries);
+    std::optional<std::size_t> getMaxEntries() const;
+    void setMaxEntries(std::optional<std::size_t> maxEntries);
 
 private slots:
     void filterData(

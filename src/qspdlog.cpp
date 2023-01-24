@@ -154,10 +154,10 @@ std::size_t QSpdLog::itemsCount() const
     return static_cast<std::size_t>(_proxyModel->rowCount());
 }
 
-std::optional<int> QSpdLog::getMaxEntries() const
+std::optional<std::size_t> QSpdLog::getMaxEntries() const
 {
   return _sourceModel->getMaxEntries();
 }
-void QSpdLog::setMaxEntries(std::optional<int> maxEntries) {
+void QSpdLog::setMaxEntries(std::optional<std::size_t> maxEntries) {
   _sourceModel->setMaxEntries(maxEntries);
 }

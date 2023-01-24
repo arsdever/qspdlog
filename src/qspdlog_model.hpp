@@ -21,8 +21,8 @@ public:
     void addEntry(entry_t entry);
     void clear();
     
-    std::optional<int> getMaxEntries() const;
-    void setMaxEntries(std::optional<int> maxEntries);
+    std::optional<std::size_t> getMaxEntries() const;
+    void setMaxEntries(std::optional<std::size_t> maxEntries);
 
 #pragma region QAbstractListModel
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
@@ -38,5 +38,5 @@ private:
     //std::vector<entry_t> _items;
     std::deque<entry_t> _items;
     //int _maxEntries;
-    std::optional<int> _maxEntries;
+    std::optional<std::size_t> _maxEntries;
 };

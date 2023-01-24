@@ -43,7 +43,7 @@ void QSpdLogModel::addEntry(entry_t entry)
     endInsertRows();
 }
 
-std::optional<int> QSpdLogModel::getMaxEntries() const
+std::optional<std::size_t> QSpdLogModel::getMaxEntries() const
 {
     return _maxEntries;
 }
@@ -126,6 +126,6 @@ QVariant QSpdLogModel::headerData(
 
     return QVariant();
 }
-void QSpdLogModel::setMaxEntries(std::optional<int> maxEntries) {
+void QSpdLogModel::setMaxEntries(std::optional<std::size_t> maxEntries) {
     _maxEntries = maxEntries;
 }
