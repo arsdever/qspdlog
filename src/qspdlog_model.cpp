@@ -29,9 +29,8 @@ QSpdLogModel::QSpdLogModel(QObject* parent)
 
 void QSpdLogModel::addEntry(entry_t entry)
 {
-    if(_maxEntries > 0 && _items.size() > _maxEntries) {
+    if(_maxEntries > 0 && _items.size() == _maxEntries) {
         beginRemoveRows(QModelIndex(), 0, 0);
-        //_items.erase(_items.begin());
         _items.pop_front();
         endRemoveRows();
     }
@@ -41,6 +40,17 @@ void QSpdLogModel::addEntry(entry_t entry)
     _items.push_back(std::move(entry));
 
     endInsertRows();
+}
+
+void QSpdLogModel::setMaxEntries(std::optional<std::size_t> maxEntries) {
+    _maxEntries = maxEntries;
+    // Incase the new maximum is below the current amount of items.
+    if(_maxEntries > 0 && _items.size() > _maxEntries) {
+        std::size_t offset = _items.size() - _maxEntries.value();
+        beginRemoveRows(QModelIndex(), 0, offset-1);
+        _items.erase(_items.begin(), _items.begin()+offset);
+        endRemoveRows();
+    }
 }
 
 std::optional<std::size_t> QSpdLogModel::getMaxEntries() const
@@ -126,6 +136,4 @@ QVariant QSpdLogModel::headerData(
 
     return QVariant();
 }
-void QSpdLogModel::setMaxEntries(std::optional<std::size_t> maxEntries) {
-    _maxEntries = maxEntries;
-}
+
