@@ -14,7 +14,7 @@ public:
     };
 
 public:
-    QSpdLogModel(QObject* parent = nullptr);
+    QSpdLogModel(QObject* parent = nullptr, int maxEntries=0);
     ~QSpdLogModel() override = default;
 
     void addEntry(entry_t entry);
@@ -32,4 +32,5 @@ public:
 
 private:
     std::vector<entry_t> _items;
+    int _maxEntries;
 };

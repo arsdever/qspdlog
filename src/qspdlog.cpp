@@ -13,9 +13,9 @@
 #include "qspdlog_proxy_model.hpp"
 #include "qt_logger_sink.hpp"
 
-QSpdLog::QSpdLog(QWidget* parent)
+QSpdLog::QSpdLog(QWidget* parent, int maxEntries)
     : QWidget(parent)
-    , _sourceModel(new QSpdLogModel)
+    , _sourceModel(new QSpdLogModel(nullptr, maxEntries))
     , _proxyModel(new QSpdLogProxyModel)
     , _view(new QTreeView)
 {

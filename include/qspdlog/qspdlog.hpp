@@ -34,7 +34,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit QSpdLog(QWidget* parent = nullptr);
+    explicit QSpdLog(QWidget* parent = nullptr, int maxEntries=0);
 
     /**
      * @brief Destructor

@@ -22,8 +22,9 @@ static constexpr std::array<const char*, 3> column_names = { "Level",
 
 } // namespace
 
-QSpdLogModel::QSpdLogModel(QObject* parent)
+QSpdLogModel::QSpdLogModel(QObject* parent, int maxEntries)
     : QAbstractListModel(parent)
+    , _maxEntries(maxEntries)
 {
 }
 
@@ -32,6 +33,11 @@ void QSpdLogModel::addEntry(entry_t entry)
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
 
     _items.push_back(std::move(entry));
+
+    if(_maxEntries > 0 && _items.size() > _maxEntries)
+    {
+        _items.erase(_items.begin());
+    }
 
     endInsertRows();
 }
