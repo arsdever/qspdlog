@@ -30,14 +30,15 @@ QSpdLogModel::QSpdLogModel(QObject* parent, int maxEntries)
 
 void QSpdLogModel::addEntry(entry_t entry)
 {
+    if(_maxEntries > 0 && _items.size() > _maxEntries) {
+        beginRemoveRows(QModelIndex(), 0, 0);
+        _items.erase(_items.begin());
+        endRemoveRows();
+    }
+
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
 
     _items.push_back(std::move(entry));
-
-    if(_maxEntries > 0 && _items.size() > _maxEntries)
-    {
-        _items.erase(_items.begin());
-    }
 
     endInsertRows();
 }
