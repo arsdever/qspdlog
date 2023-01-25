@@ -116,6 +116,34 @@ private slots:
         QCOMPARE(widget.itemsCount(), 0);
     }
 
+    void limitLogTest()
+    {
+        QSpdLog widget;
+        QCOMPARE(widget.getMaxEntries(), std::nullopt);
+        widget.setMaxEntries(20);
+        QCOMPARE(widget.getMaxEntries(), 20);
+        auto logger = std::make_shared<spdlog::logger>("test");
+
+        logger->sinks().push_back(widget.sink());
+        logger->flush_on(spdlog::level::trace);
+        logger->info("test");
+        QCOMPARE(widget.itemsCount(), 1);
+        for(int i=0; i<100; i++) {
+          logger->info("test {0}", i);
+        }
+        logger->flush();
+        QCOMPARE(widget.itemsCount(), 20);
+        widget.setMaxEntries(std::nullopt);
+        QCOMPARE(widget.getMaxEntries(), std::nullopt);
+        for(int i=0; i<50; i++) {
+          logger->info("test2 {0}", i);
+        }
+        QCOMPARE(widget.itemsCount(), 70);
+        widget.setMaxEntries(20);
+        QCOMPARE(widget.getMaxEntries(), 20);
+        QCOMPARE(widget.itemsCount(), 20);
+    }
+
     void runToolbarTests()
     {
         std::vector<std::unique_ptr<QAbstractSpdLogToolBar>> toolbars;
