@@ -162,4 +162,3 @@ std::optional<std::size_t> QSpdLog::getMaxEntries() const
 {
   return _sourceModel->getMaxEntries();
 }
-

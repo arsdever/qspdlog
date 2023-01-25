@@ -136,4 +136,3 @@ QVariant QSpdLogModel::headerData(
 
     return QVariant();
 }
-
