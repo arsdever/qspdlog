@@ -23,7 +23,8 @@ protected:
 
         _model->addEntry({ msg.time.time_since_epoch(),
                            msg.level,
-                           fmt::to_string(msg.payload) });
+                           fmt::to_string(msg.payload),
+                           fmt::to_string(msg.logger_name) });
     }
 
     void flush_() override { }

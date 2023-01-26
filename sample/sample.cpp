@@ -69,6 +69,7 @@ void configureToolbar(
 {
     QAction* clearAction = toolbar.addAction("Clear");
     QAction* generateAction = toolbar.addAction("Generate");
+    QAction* generateMultipleAction = toolbar.addAction("GenerateMultiple");
 
     generateAction->connect(
         generateAction,
@@ -84,6 +85,35 @@ void configureToolbar(
                 i
             );
         }
+        });
+
+    generateMultipleAction->connect(
+        generateMultipleAction,
+        &QAction::triggered,
+        [ &logView, logger ](bool) {
+        // create 10 threads and generate 10 messages with random levels
+        std::vector<std::thread> threads;
+        for (int i = 0; i < 10; ++i) {
+            threads.emplace_back([ &logView, i, logger ]() {
+                auto threadLocalLogger =
+                    createLogger(fmt::format("thread {}", i));
+                threadLocalLogger->sinks().push_back(logView.sink());
+                logger->info("Thread {} started", i);
+                for (int i = 0; i < 10; ++i) {
+                    threadLocalLogger->log(
+                        static_cast<spdlog::level::level_enum>(
+                            rand() % spdlog::level::off
+                        ),
+                        "Message {}",
+                        i
+                    );
+                }
+                logger->info("Thread {} finished", i);
+            });
+        }
+
+        for (auto& thread : threads)
+            thread.join();
         });
 
     clearAction->connect(clearAction, &QAction::triggered, [ &logView ](bool) {

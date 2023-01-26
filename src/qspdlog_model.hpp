@@ -12,6 +12,7 @@ public:
         std::chrono::duration<double> time;
         int level;
         std::string message;
+        std::string loggerName;
     };
 
 public:
