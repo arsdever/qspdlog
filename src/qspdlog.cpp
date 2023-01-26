@@ -32,11 +32,12 @@ QSpdLog::QSpdLog(QWidget* parent)
         &QHeaderView::customContextMenuRequested,
         this,
         [ this, header ](const QPoint& pos) {
-        QMenu menu;
+        QMenu contextMenu;
+        contextMenu.setObjectName("qspdlogHeaderContextMenu");
         for (int i = 0; i < _sourceModel->columnCount(); ++i) {
             QString columnHeader =
                 _sourceModel->headerData(i, Qt::Horizontal).toString();
-            QAction* action = menu.addAction(columnHeader);
+            QAction* action = contextMenu.addAction(columnHeader);
             action->setCheckable(true);
             action->setChecked(!header->isSectionHidden(i));
             action->setData(i);
@@ -50,11 +51,9 @@ QSpdLog::QSpdLog(QWidget* parent)
                 if (action)
                     header->setSectionHidden(action->data().toInt(), !checked);
                 });
-
-            menu.addAction(action);
         }
 
-        menu.exec(header->mapToGlobal(pos));
+        contextMenu.exec(header->mapToGlobal(pos));
         });
 
     _proxyModel->setSourceModel(_sourceModel);
