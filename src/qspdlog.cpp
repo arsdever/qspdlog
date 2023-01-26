@@ -1,7 +1,9 @@
 #include <QAction>
 #include <QComboBox>
 #include <QHBoxLayout>
+#include <QHeaderView>
 #include <QLineEdit>
+#include <QMenu>
 #include <QScrollBar>
 #include <QTreeView>
 #include <spdlog/logger.h>
@@ -22,6 +24,38 @@ QSpdLog::QSpdLog(QWidget* parent)
     Q_INIT_RESOURCE(qspdlog_resources);
     _view->setModel(_proxyModel);
     _view->setObjectName("qspdlogTreeView");
+
+    QHeaderView* header = _view->header();
+    header->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(
+        header,
+        &QHeaderView::customContextMenuRequested,
+        this,
+        [ this, header ](const QPoint& pos) {
+        QMenu menu;
+        for (int i = 0; i < _sourceModel->columnCount(); ++i) {
+            QString columnHeader =
+                _sourceModel->headerData(i, Qt::Horizontal).toString();
+            QAction* action = menu.addAction(columnHeader);
+            action->setCheckable(true);
+            action->setChecked(!header->isSectionHidden(i));
+            action->setData(i);
+
+            connect(
+                action,
+                &QAction::toggled,
+                this,
+                [ this, header ](bool checked) {
+                QAction* action = qobject_cast<QAction*>(sender());
+                if (action)
+                    header->setSectionHidden(action->data().toInt(), !checked);
+                });
+
+            menu.addAction(action);
+        }
+
+        menu.exec(header->mapToGlobal(pos));
+        });
 
     _proxyModel->setSourceModel(_sourceModel);
 
@@ -154,11 +188,12 @@ std::size_t QSpdLog::itemsCount() const
     return static_cast<std::size_t>(_proxyModel->rowCount());
 }
 
-void QSpdLog::setMaxEntries(std::optional<std::size_t> maxEntries) {
-  _sourceModel->setMaxEntries(maxEntries);
+void QSpdLog::setMaxEntries(std::optional<std::size_t> maxEntries)
+{
+    _sourceModel->setMaxEntries(maxEntries);
 }
 
 std::optional<std::size_t> QSpdLog::getMaxEntries() const
 {
-  return _sourceModel->getMaxEntries();
+    return _sourceModel->getMaxEntries();
 }
