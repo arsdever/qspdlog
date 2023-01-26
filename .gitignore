@@ -1,6 +1,8 @@
 cmake-build*
 .idea
 build/
+coverage-report/
+default.profraw
 
 CMakeLists.txt.user
 CMakeCache.txt
