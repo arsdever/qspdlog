@@ -16,9 +16,11 @@ static constexpr std::array<const char*, 7> level_names = {
     "Trace", "Debug", "Info", "Warning", "Error", "Critical", "Off"
 };
 
-static constexpr std::array<const char*, 3> column_names = { "Level",
-                                                             "Time",
-                                                             "Message" };
+enum class Column { Level = 0, Logger, Time, Message, Last };
+
+static constexpr std::array<const char*, 4> column_names = {
+    "Level", "Logger", "Time", "Message"
+};
 
 } // namespace
 
@@ -70,7 +72,10 @@ int QSpdLogModel::rowCount(const QModelIndex& parent) const
     return _items.size();
 }
 
-int QSpdLogModel::columnCount(const QModelIndex& parent) const { return 3; }
+int QSpdLogModel::columnCount(const QModelIndex& parent) const
+{
+    return static_cast<std::size_t>(Column::Last);
+}
 
 QVariant QSpdLogModel::data(const QModelIndex& index, int role) const
 {
@@ -80,12 +85,16 @@ QVariant QSpdLogModel::data(const QModelIndex& index, int role) const
     switch (role) {
         case Qt::DisplayRole: {
             auto const& item = _items[ index.row() ];
-            switch (index.column()) {
-                case 0: {
+            switch (static_cast<Column>(index.column())) {
+                case Column::Level: {
                     return QString(level_names[ item.level ]);
                 }
 
-                case 1: {
+                case Column::Logger: {
+                    return QString::fromStdString(item.loggerName);
+                }
+
+                case Column::Time: {
                     return QDateTime::fromMSecsSinceEpoch(
                         std::chrono::duration_cast<std::chrono::milliseconds>(
                             item.time
@@ -94,7 +103,7 @@ QVariant QSpdLogModel::data(const QModelIndex& index, int role) const
                     );
                 }
 
-                case 2: {
+                case Column::Message: {
                     return QString::fromStdString(item.message);
                 }
 

@@ -2,6 +2,7 @@
 
 #include <QAbstractListModel>
 #include <deque>
+#include <optional>
 
 class QSpdLogModel : public QAbstractListModel
 {
@@ -12,6 +13,7 @@ public:
         std::chrono::duration<double> time;
         int level;
         std::string message;
+        std::string loggerName;
     };
 
 public:
