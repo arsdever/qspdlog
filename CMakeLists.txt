@@ -6,6 +6,8 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+set(CMAKE_CXX_STANDARD 20)
+
 option(QSPDLOG_BUILD_TESTING "Option to enable/disable building the tests"
        ${BUILD_TESTING})
 option(QSPDLOG_REPORT_COVERAGE "Option to enable/disable coverage report"
