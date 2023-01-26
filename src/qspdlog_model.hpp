@@ -2,6 +2,7 @@
 
 #include <QAbstractListModel>
 #include <deque>
+#include <optional>
 
 class QSpdLogModel : public QAbstractListModel
 {
