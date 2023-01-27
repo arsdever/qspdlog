@@ -145,6 +145,20 @@ private slots:
         QCOMPARE(widget.itemsCount(), 20);
     }
 
+    void backgroundForegroundColorTest()
+    {
+        QSpdLog widget;
+        QCOMPARE(widget.getBackgroundMapping("test"), std::nullopt);
+        widget.setBackgroundMapping("test", QBrush(Qt::red));
+        QCOMPARE(widget.getBackgroundMapping("test"), QBrush(Qt::red));
+        QCOMPARE(widget.getBackgroundMapping("test2"), std::nullopt);
+
+        QCOMPARE(widget.getForegroundMapping("test"), std::nullopt);
+        widget.setForegroundMapping("test", QBrush(Qt::white));
+        QCOMPARE(widget.getForegroundMapping("test"), QBrush(Qt::white));
+        QCOMPARE(widget.getForegroundMapping("test2"), std::nullopt);
+    }
+
     void runToolbarTests()
     {
         std::vector<std::unique_ptr<QAbstractSpdLogToolBar>> toolbars;

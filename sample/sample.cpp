@@ -70,6 +70,30 @@ void configureToolbar(
     QAction* clearAction = toolbar.addAction("Clear");
     QAction* generateAction = toolbar.addAction("Generate");
     QAction* generateMultipleAction = toolbar.addAction("GenerateMultiple");
+    QAction* setRedBackgroundThread1 = toolbar.addAction("Set red background for thread 1");
+    QAction* clearRedBackgroundThread1 = toolbar.addAction("Clear red background");
+
+    setRedBackgroundThread1->connect(
+        setRedBackgroundThread1,
+        &QAction::triggered,
+        [&logView](bool) {
+            logView.setForegroundMapping(
+            "thread 1",
+            QBrush(Qt::red)
+            );
+        }
+        );
+
+    clearRedBackgroundThread1->connect(
+        clearRedBackgroundThread1,
+        &QAction::triggered,
+        [&logView](bool) {
+        logView.setForegroundMapping(
+            "thread 1",
+            std::nullopt
+        );
+        }
+    );
 
     generateAction->connect(
         generateAction,

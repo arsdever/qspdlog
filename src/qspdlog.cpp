@@ -196,3 +196,27 @@ std::optional<std::size_t> QSpdLog::getMaxEntries() const
 {
     return _sourceModel->getMaxEntries();
 }
+void QSpdLog::setForegroundMapping(
+    const std::string& loggerName, std::optional<QBrush> brush
+)
+{
+    _sourceModel->setForegroundMapping(loggerName, brush);
+}
+std::optional<QBrush> QSpdLog::getForegroundMapping(
+    const std::string& loggerName
+) const
+{
+    return _sourceModel->getForegroundMapping(loggerName);
+}
+void QSpdLog::setBackgroundMapping(
+    const std::string& loggerName, std::optional<QBrush> brush
+)
+{
+    _sourceModel->setBackgroundMapping(loggerName, brush);
+}
+std::optional<QBrush> QSpdLog::getBackgroundMapping(
+    const std::string& loggerName
+) const
+{
+    return _sourceModel->getBackgroundMapping(loggerName);
+}
