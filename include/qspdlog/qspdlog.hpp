@@ -11,10 +11,11 @@ class sink;
 } // namespace sinks
 } // namespace spdlog
 
+class QAbstractSpdLogToolBar;
+class QMenu;
 class QSpdLogModel;
 class QSpdLogProxyModel;
 class QTreeView;
-class QAbstractSpdLogToolBar;
 
 enum class AutoScrollPolicy {
     AutoScrollPolicyDisabled =
@@ -91,17 +92,18 @@ public:
     /**
      * @brief Set the maximum number of items in the widget.
      *
-     * @param std::optional<std::size_t> the maximum number of items in the widget
+     * @param std::optional<std::size_t> the maximum number of items in the
+     * widget
      */
     void setMaxEntries(std::optional<std::size_t> maxEntries);
 
     /**
      * @brief Get the maximum number of items in the widget.
      *
-     * @return std::optional<std::size_t> the maximum number of items in the widget
+     * @return std::optional<std::size_t> the maximum number of items in the
+     * widget
      */
     std::optional<std::size_t> getMaxEntries() const;
-
 
 private slots:
     void filterData(
