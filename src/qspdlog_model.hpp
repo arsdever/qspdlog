@@ -26,6 +26,12 @@ public:
     void setMaxEntries(std::optional<std::size_t> maxEntries);
     std::optional<std::size_t> getMaxEntries() const;
 
+    void setForegroundMapping(const std::string& loggerName, std::optional<QBrush> brush);
+    std::optional<QBrush> getForegroundMapping(const std::string& loggerName) const;
+
+    void setBackgroundMapping(const std::string& loggerName, std::optional<QBrush> brush);
+    std::optional<QBrush> getBackgroundMapping(const std::string& loggerName) const;
+
 #pragma region QAbstractListModel
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     int columnCount(const QModelIndex& parent = QModelIndex()) const override;
@@ -39,4 +45,6 @@ public:
 private:
     std::deque<entry_t> _items;
     std::optional<std::size_t> _maxEntries;
+    std::map<std::string, QBrush> _backgroundMappings;
+    std::map<std::string, QBrush> _foregroundMappings;
 };

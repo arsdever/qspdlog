@@ -23,7 +23,8 @@ else()
 endif()
 
 find_package(Qt${QT_VERSION} REQUIRED COMPONENTS Core Gui Widgets)
-find_package(spdlog REQUIRED)
+#find_package(spdlog REQUIRED)
+add_subdirectory(external/spdlog)
 
 add_subdirectory(include)
 

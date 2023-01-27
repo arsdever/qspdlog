@@ -1,3 +1,4 @@
+#include <QBrush>
 #include <QDateTime>
 #include <QFile>
 #include <QIcon>
@@ -128,6 +129,20 @@ QVariant QSpdLogModel::data(const QModelIndex& index, int role) const
             break;
         }
 
+        case Qt::BackgroundRole: {
+            std::string loggerName = _items[index.row()].loggerName;
+            if(_backgroundMappings.contains(loggerName)) {
+                return _backgroundMappings.at(loggerName);
+            }
+        }
+
+        case Qt::ForegroundRole: {
+            std::string loggerName = _items[index.row()].loggerName;
+            if(_foregroundMappings.contains(loggerName)) {
+                return _foregroundMappings.at(loggerName);
+            }
+        }
+
         default: {
             break;
         }
@@ -144,4 +159,40 @@ QVariant QSpdLogModel::headerData(
         return QString(column_names[ section ]);
 
     return QVariant();
+}
+void QSpdLogModel::setForegroundMapping(
+    const std::string& loggerName, std::optional<QBrush> brush
+)
+{
+    if(brush.has_value())
+        _foregroundMappings[loggerName] = brush.value();
+    else if(_foregroundMappings.contains(loggerName))
+        _foregroundMappings.erase(loggerName);
+}
+std::optional<QBrush> QSpdLogModel::getForegroundMapping(
+    const std::string& loggerName
+) const
+{
+    if(_foregroundMappings.contains(loggerName))
+        return _foregroundMappings.at(loggerName);
+
+    return std::nullopt;
+}
+void QSpdLogModel::setBackgroundMapping(
+    const std::string& loggerName, std::optional<QBrush> brush
+)
+{
+    if(brush.has_value())
+        _backgroundMappings[loggerName] = brush.value();
+    else if(_backgroundMappings.contains(loggerName))
+        _backgroundMappings.erase(loggerName);
+}
+std::optional<QBrush> QSpdLogModel::getBackgroundMapping(
+    const std::string& loggerName
+) const
+{
+    if(_backgroundMappings.contains(loggerName))
+        return _backgroundMappings.at(loggerName);
+
+    return std::nullopt;
 }
