@@ -395,6 +395,46 @@ private slots:
         headerView->customContextMenuRequested(QPoint(5, 5));
         QCOMPARE(headerView->count(), 4);
         QCOMPARE(headerView->hiddenSectionCount(), 1);
+        QMetaObject::invokeMethod(
+            headerView,
+            [] {
+            QList<QWidget*> topLevelWidgets = QApplication::topLevelWidgets();
+            auto widgetsIt = std::find_if(
+                topLevelWidgets.begin(),
+                topLevelWidgets.end(),
+                [](QWidget* widget) {
+                return widget->objectName() == "qspdlogHeaderContextMenu";
+                });
+            QVERIFY(widgetsIt != topLevelWidgets.end());
+            QMenu* menu = qobject_cast<QMenu*>(*widgetsIt);
+            QTest::mouseClick(
+                menu, Qt::LeftButton, Qt::NoModifier, QPoint(5, 25)
+            );
+            },
+            Qt::QueuedConnection);
+        headerView->customContextMenuRequested(QPoint(5, 5));
+        QCOMPARE(headerView->count(), 4);
+        QCOMPARE(headerView->hiddenSectionCount(), 2);
+        QMetaObject::invokeMethod(
+            headerView,
+            [] {
+            QList<QWidget*> topLevelWidgets = QApplication::topLevelWidgets();
+            auto widgetsIt = std::find_if(
+                topLevelWidgets.begin(),
+                topLevelWidgets.end(),
+                [](QWidget* widget) {
+                return widget->objectName() == "qspdlogHeaderContextMenu";
+                });
+            QVERIFY(widgetsIt != topLevelWidgets.end());
+            QMenu* menu = qobject_cast<QMenu*>(*widgetsIt);
+            QTest::mouseClick(
+                menu, Qt::LeftButton, Qt::NoModifier, QPoint(5, 5)
+            );
+            },
+            Qt::QueuedConnection);
+        headerView->customContextMenuRequested(QPoint(5, 5));
+        QCOMPARE(headerView->count(), 4);
+        QCOMPARE(headerView->hiddenSectionCount(), 1);
     }
 };
 
