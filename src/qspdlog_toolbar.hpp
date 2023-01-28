@@ -32,6 +32,7 @@ public:
     QAction* caseSensitive() override;
     QAction* regex() override;
     QAction* clearHistory() override;
+    QAction* style() override;
     QComboBox* autoScrollPolicy() override;
 #pragma endregion
 
@@ -40,6 +41,7 @@ public:
     void clearCompleterHistory();
 
 signals:
+    void styleChangeRequested();
     void filterChanged();
     void autoScrollPolicyChanged(int index);
 
@@ -52,6 +54,7 @@ private:
     QAction* _caseAction;
     QAction* _regexAction;
     QAction* _clearHistory;
+    QAction* _styleAction;
     QComboBox* _autoScrollPolicy;
     QAbstractItemModel* _completerData;
     QCompleter* _completer;

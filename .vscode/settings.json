@@ -81,7 +81,8 @@
 		"optional": "cpp",
 		"queue": "cpp",
 		"semaphore": "cpp",
-		"streambuf": "cpp"
+		"streambuf": "cpp",
+		"*.rh": "cpp"
 	},
 	"C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
 }

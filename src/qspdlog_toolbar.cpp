@@ -29,6 +29,9 @@ QSpdLogToolBar::QSpdLogToolBar(QWidget* parent)
 
     _clearHistory->setObjectName("clearHistoryAction");
 
+    _styleAction = addAction("Set style");
+    _styleAction->setObjectName("styleAction");
+
     _autoScrollPolicy->setObjectName("_autoScrollPolicy");
     _autoScrollPolicy->addItems(
         { "Manual Scroll", "Scroll To Bottom", "Smart Scroll" }
@@ -65,6 +68,9 @@ QSpdLogToolBar::QSpdLogToolBar(QWidget* parent)
     connect(
         _regexAction, &QAction::toggled, this, &QSpdLogToolBar::filterChanged
     );
+    connect(_styleAction, &QAction::triggered, this, [ this ]() {
+        emit styleChangeRequested();
+    });
     connect(
         _autoScrollPolicy,
         QOverload<int>::of(&QComboBox::currentIndexChanged),
@@ -100,6 +106,8 @@ QAction* QSpdLogToolBar::caseSensitive() { return _caseAction; }
 QAction* QSpdLogToolBar::regex() { return _regexAction; }
 
 QAction* QSpdLogToolBar::clearHistory() { return _clearHistory; }
+
+QAction* QSpdLogToolBar::style() { return _styleAction; }
 
 QComboBox* QSpdLogToolBar::autoScrollPolicy() { return _autoScrollPolicy; }
 

@@ -13,6 +13,7 @@
 #include "qspdlog/qabstract_spdlog_toolbar.hpp"
 #include "qspdlog_model.hpp"
 #include "qspdlog_proxy_model.hpp"
+#include "qspdlog_style_dialog.hpp"
 #include "qt_logger_sink.hpp"
 
 QSpdLog::QSpdLog(QWidget* parent)
@@ -91,6 +92,7 @@ void QSpdLog::registerToolbar(QAbstractSpdLogToolBar* toolbarInterface)
     QLineEdit* filter = toolbarInterface->filter();
     QAction* regex = toolbarInterface->regex();
     QAction* caseSensitive = toolbarInterface->caseSensitive();
+    QAction* style = toolbarInterface->style();
     QComboBox* autoScrollPolicyCombo = toolbarInterface->autoScrollPolicy();
 
     auto updateFilter = [ this, filter, regex, caseSensitive ]() {
@@ -102,6 +104,25 @@ void QSpdLog::registerToolbar(QAbstractSpdLogToolBar* toolbarInterface)
     connect(filter, &QLineEdit::textChanged, this, updateFilter);
     connect(regex, &QAction::toggled, this, updateFilter);
     connect(caseSensitive, &QAction::toggled, this, updateFilter);
+    connect(style, &QAction::triggered, this, [ this ]() {
+        std::optional<QSpdLogStyleDialog::Style> result =
+            QSpdLogStyleDialog::getLoggerStyle();
+
+        if (!result)
+            return;
+
+        QSpdLogStyleDialog::Style value = result.value();
+
+        if (value.backgroundColor)
+            _sourceModel->setLoggerBackgroundBrush(
+                value.loggerName, value.backgroundColor.value()
+            );
+
+        if (value.textColor)
+            _sourceModel->setLoggerForegroundBrush(
+                value.loggerName, value.textColor.value()
+            );
+    });
     connect(
         autoScrollPolicyCombo,
         QOverload<int>::of(&QComboBox::currentIndexChanged),

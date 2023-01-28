@@ -36,6 +36,7 @@ public:
     QAction* regex() override { return _regex; }
     QAction* caseSensitive() override { return _caseSensitive; }
     QAction* clearHistory() override { return _clearHistory; }
+    QAction* style() override { return _style; }
     QComboBox* autoScrollPolicy() override { return _autoScrollPolicy; }
 
 #pragma endregion
@@ -45,6 +46,7 @@ public:
     QAction* _regex = new QAction;
     QAction* _caseSensitive = new QAction;
     QAction* _clearHistory = new QAction;
+    QAction* _style = new QAction;
     QComboBox* _autoScrollPolicy = new QComboBox;
 };
 

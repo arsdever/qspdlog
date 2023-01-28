@@ -17,6 +17,7 @@ public:
     virtual QAction* caseSensitive() = 0;
     virtual QAction* regex() = 0;
     virtual QAction* clearHistory() = 0;
+    virtual QAction* style() = 0;
     virtual QComboBox* autoScrollPolicy() = 0;
 
 private:
