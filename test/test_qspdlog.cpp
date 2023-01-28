@@ -150,19 +150,19 @@ private slots:
     void backgroundForegroundColorTest()
     {
         QSpdLog widget;
-        QCOMPARE(widget.getLoggerBackgroundBrush("test"), std::nullopt);
-        widget.setLoggerBackgroundBrush("test", QBrush(Qt::red));
-        QCOMPARE(widget.getLoggerBackgroundBrush("test"), QBrush(Qt::red));
-        QCOMPARE(widget.getLoggerBackgroundBrush("test2"), std::nullopt);
-        widget.setLoggerBackgroundBrush("test", std::nullopt);
-        QCOMPARE(widget.getLoggerBackgroundBrush("test"), std::nullopt);
+        QCOMPARE(widget.getLoggerBackground("test"), std::nullopt);
+        widget.setLoggerBackground("test", QBrush(Qt::red));
+        QCOMPARE(widget.getLoggerBackground("test"), QBrush(Qt::red));
+        QCOMPARE(widget.getLoggerBackground("test2"), std::nullopt);
+        widget.setLoggerBackground("test", std::nullopt);
+        QCOMPARE(widget.getLoggerBackground("test"), std::nullopt);
 
-        QCOMPARE(widget.getLoggerForegroundBrush("test"), std::nullopt);
-        widget.setLoggerForegroundBrush("test", QBrush(Qt::white));
-        QCOMPARE(widget.getLoggerForegroundBrush("test"), QBrush(Qt::white));
-        QCOMPARE(widget.getLoggerForegroundBrush("test2"), std::nullopt);
-        widget.setLoggerForegroundBrush("test", std::nullopt);
-        QCOMPARE(widget.getLoggerForegroundBrush("test"), std::nullopt);
+        QCOMPARE(widget.getLoggerForeground("test"), std::nullopt);
+        widget.setLoggerForeground("test", Qt::white);
+        QCOMPARE(widget.getLoggerForeground("test"), Qt::white);
+        QCOMPARE(widget.getLoggerForeground("test2"), std::nullopt);
+        widget.setLoggerForeground("test", std::nullopt);
+        QCOMPARE(widget.getLoggerForeground("test"), std::nullopt);
     }
 
     void runToolbarTests()

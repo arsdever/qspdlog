@@ -114,12 +114,12 @@ void QSpdLog::registerToolbar(QAbstractSpdLogToolBar* toolbarInterface)
         QSpdLogStyleDialog::Style value = result.value();
 
         if (value.backgroundColor)
-            _sourceModel->setLoggerBackgroundBrush(
+            _sourceModel->setLoggerBackground(
                 value.loggerName, value.backgroundColor.value()
             );
 
         if (value.textColor)
-            _sourceModel->setLoggerForegroundBrush(
+            _sourceModel->setLoggerForeground(
                 value.loggerName, value.textColor.value()
             );
     });
@@ -218,30 +218,30 @@ std::optional<std::size_t> QSpdLog::getMaxEntries() const
     return _sourceModel->getMaxEntries();
 }
 
-void QSpdLog::setLoggerForegroundBrush(
-    std::string_view loggerName, std::optional<QBrush> brush
+void QSpdLog::setLoggerForeground(
+    std::string_view loggerName, std::optional<QColor> brush
 )
 {
-    _sourceModel->setLoggerForegroundBrush(loggerName, brush);
+    _sourceModel->setLoggerForeground(loggerName, brush);
 }
 
-std::optional<QBrush> QSpdLog::getLoggerForegroundBrush(
+std::optional<QColor> QSpdLog::getLoggerForeground(
     std::string_view loggerName
 ) const
 {
-    return _sourceModel->getLoggerForegroundBrush(loggerName);
+    return _sourceModel->getLoggerForeground(loggerName);
 }
 
-void QSpdLog::setLoggerBackgroundBrush(
+void QSpdLog::setLoggerBackground(
     std::string_view loggerName, std::optional<QBrush> brush
 )
 {
-    _sourceModel->setLoggerBackgroundBrush(loggerName, brush);
+    _sourceModel->setLoggerBackground(loggerName, brush);
 }
 
-std::optional<QBrush> QSpdLog::getLoggerBackgroundBrush(
+std::optional<QBrush> QSpdLog::getLoggerBackground(
     std::string_view loggerName
 ) const
 {
-    return _sourceModel->getLoggerBackgroundBrush(loggerName);
+    return _sourceModel->getLoggerBackground(loggerName);
 }

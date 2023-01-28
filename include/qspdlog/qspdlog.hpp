@@ -113,8 +113,8 @@ public:
      * foreground brush
      * @param std::optional<QBrush> the brush object or std::nullopt
      */
-    void setLoggerForegroundBrush(
-        std::string_view loggerName, std::optional<QBrush> brush
+    void setLoggerForeground(
+        std::string_view loggerName, std::optional<QColor> brush
     );
 
     /**
@@ -125,7 +125,7 @@ public:
      * foreground brush from
      * @return std::optional<QBrush> the QBrush object or std::nullopt
      */
-    std::optional<QBrush> getLoggerForegroundBrush(std::string_view loggerName
+    std::optional<QColor> getLoggerForeground(std::string_view loggerName
     ) const;
 
     /**
@@ -136,9 +136,7 @@ public:
      * background brush
      * @param std::optional<QBrush> the brush object or std::nullopt
      */
-    void setLoggerBackgroundBrush(
-        std::string_view, std::optional<QBrush> brush
-    );
+    void setLoggerBackground(std::string_view, std::optional<QBrush> brush);
 
     /**
      * @brief Get the background QBrush for the messages of the corresponding
@@ -148,7 +146,7 @@ public:
      * background brush from
      * @return std::optional<QBrush> the QBrush object or std::nullopt
      */
-    std::optional<QBrush> getLoggerBackgroundBrush(std::string_view loggerName
+    std::optional<QBrush> getLoggerBackground(std::string_view loggerName
     ) const;
 
 private slots:

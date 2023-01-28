@@ -26,11 +26,11 @@ public:
     void setMaxEntries(std::optional<std::size_t> maxEntries);
     std::optional<std::size_t> getMaxEntries() const;
 
-    void setLoggerForegroundBrush(std::string_view loggerName, std::optional<QBrush> brush);
-    std::optional<QBrush> getLoggerForegroundBrush(std::string_view loggerName) const;
+    void setLoggerForeground(std::string_view loggerName, std::optional<QColor> color);
+    std::optional<QColor> getLoggerForeground(std::string_view loggerName) const;
 
-    void setLoggerBackgroundBrush(std::string_view loggerName, std::optional<QBrush> brush);
-    std::optional<QBrush> getLoggerBackgroundBrush(std::string_view loggerName) const;
+    void setLoggerBackground(std::string_view loggerName, std::optional<QBrush> brush);
+    std::optional<QBrush> getLoggerBackground(std::string_view loggerName) const;
 
 #pragma region QAbstractListModel
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
@@ -46,5 +46,5 @@ private:
     std::deque<entry_t> _items;
     std::optional<std::size_t> _maxEntries;
     std::map<std::string, QBrush> _backgroundMappings;
-    std::map<std::string, QBrush> _foregroundMappings;
+    std::map<std::string, QColor> _foregroundMappings;
 };

@@ -32,7 +32,7 @@ QSpdLogModel::QSpdLogModel(QObject* parent)
 
 void QSpdLogModel::addEntry(entry_t entry)
 {
-    if(_maxEntries > 0 && _items.size() == _maxEntries) {
+    if (_maxEntries > 0 && _items.size() == _maxEntries) {
         beginRemoveRows(QModelIndex(), 0, 0);
         _items.pop_front();
         endRemoveRows();
@@ -45,13 +45,14 @@ void QSpdLogModel::addEntry(entry_t entry)
     endInsertRows();
 }
 
-void QSpdLogModel::setMaxEntries(std::optional<std::size_t> maxEntries) {
+void QSpdLogModel::setMaxEntries(std::optional<std::size_t> maxEntries)
+{
     _maxEntries = maxEntries;
     // Incase the new maximum is below the current amount of items.
-    if(_maxEntries > 0 && _items.size() > _maxEntries) {
+    if (_maxEntries > 0 && _items.size() > _maxEntries) {
         std::size_t offset = _items.size() - _maxEntries.value();
-        beginRemoveRows(QModelIndex(), 0, offset-1);
-        _items.erase(_items.begin(), _items.begin()+offset);
+        beginRemoveRows(QModelIndex(), 0, offset - 1);
+        _items.erase(_items.begin(), _items.begin() + offset);
         endRemoveRows();
     }
 }
@@ -130,19 +131,17 @@ QVariant QSpdLogModel::data(const QModelIndex& index, int role) const
         }
 
         case Qt::BackgroundRole: {
-            std::string loggerName = _items[index.row()].loggerName;
-            if(_backgroundMappings.contains(loggerName)) {
+            std::string loggerName = _items[ index.row() ].loggerName;
+            if (_backgroundMappings.contains(loggerName))
                 return _backgroundMappings.at(loggerName);
-            }
 
             break;
         }
 
         case Qt::ForegroundRole: {
-            std::string loggerName = _items[index.row()].loggerName;
-            if(_foregroundMappings.contains(loggerName)) {
+            std::string loggerName = _items[ index.row() ].loggerName;
+            if (_foregroundMappings.contains(loggerName))
                 return _foregroundMappings.at(loggerName);
-            }
 
             break;
         }
@@ -164,54 +163,72 @@ QVariant QSpdLogModel::headerData(
 
     return QVariant();
 }
-void QSpdLogModel::setLoggerForegroundBrush(
-    std::string_view loggerName, std::optional<QBrush> brush
+void QSpdLogModel::setLoggerForeground(
+    std::string_view loggerName, std::optional<QColor> color
 )
 {
-    int lastRow = this->rowCount()-1;
-    if(lastRow < 0) lastRow = 0;
-    int lastColumn = this->columnCount()-1;
-    if(lastColumn < 0) lastColumn = 0;
-    if(brush.has_value()) {
-        _foregroundMappings[ std::string(loggerName) ] = brush.value();
-        emit dataChanged(this->index(0), this->index(lastRow, lastColumn));
-    } else if(_foregroundMappings.contains(std::string(loggerName)))
-    {
+    int lastRow = this->rowCount() - 1;
+    if (lastRow < 0)
+        lastRow = 0;
+    int lastColumn = this->columnCount() - 1;
+    if (lastColumn < 0)
+        lastColumn = 0;
+    if (color.has_value()) {
+        _foregroundMappings[ std::string(loggerName) ] = color.value();
+        emit dataChanged(
+            this->index(0),
+            this->index(lastRow, lastColumn),
+            { Qt::ForegroundRole }
+        );
+    } else if (_foregroundMappings.contains(std::string(loggerName))) {
         _foregroundMappings.erase(std::string(loggerName));
-        emit dataChanged(this->index(0), this->index(lastRow, lastColumn));
+        emit dataChanged(
+            this->index(0),
+            this->index(lastRow, lastColumn),
+            { Qt::ForegroundRole }
+        );
     }
 }
-std::optional<QBrush> QSpdLogModel::getLoggerForegroundBrush(
+std::optional<QColor> QSpdLogModel::getLoggerForeground(
     std::string_view loggerName
 ) const
 {
-    if(_foregroundMappings.contains(std::string(loggerName)))
+    if (_foregroundMappings.contains(std::string(loggerName)))
         return _foregroundMappings.at(std::string(loggerName));
 
     return std::nullopt;
 }
-void QSpdLogModel::setLoggerBackgroundBrush(
+void QSpdLogModel::setLoggerBackground(
     std::string_view loggerName, std::optional<QBrush> brush
 )
 {
-    int lastRow = this->rowCount()-1;
-    if(lastRow < 0) lastRow = 0;
-    int lastColumn = this->columnCount()-1;
-    if(lastColumn < 0) lastColumn = 0;
+    int lastRow = this->rowCount() - 1;
+    if (lastRow < 0)
+        lastRow = 0;
+    int lastColumn = this->columnCount() - 1;
+    if (lastColumn < 0)
+        lastColumn = 0;
     if (brush.has_value()) {
         _backgroundMappings[ std::string(loggerName) ] = brush.value();
-
-        emit dataChanged(this->index(0), this->index(lastRow, lastColumn));
-    }else if(_backgroundMappings.contains(std::string(loggerName))) {
-            _backgroundMappings.erase(std::string(loggerName));
-            emit dataChanged(this->index(0), this->index(lastRow, lastColumn));
+        emit dataChanged(
+            this->index(0),
+            this->index(lastRow, lastColumn),
+            { Qt::BackgroundRole }
+        );
+    } else if (_backgroundMappings.contains(std::string(loggerName))) {
+        _backgroundMappings.erase(std::string(loggerName));
+        emit dataChanged(
+            this->index(0),
+            this->index(lastRow, lastColumn),
+            { Qt::BackgroundRole }
+        );
     }
 }
-std::optional<QBrush> QSpdLogModel::getLoggerBackgroundBrush(
+std::optional<QBrush> QSpdLogModel::getLoggerBackground(
     std::string_view loggerName
 ) const
 {
-    if(_backgroundMappings.contains(std::string(loggerName)))
+    if (_backgroundMappings.contains(std::string(loggerName)))
         return _backgroundMappings.at(std::string(loggerName));
 
     return std::nullopt;
