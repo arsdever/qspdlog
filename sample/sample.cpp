@@ -77,10 +77,7 @@ void configureToolbar(
         setRedBackgroundThread1,
         &QAction::triggered,
         [&logView](bool) {
-            logView.setForegroundMapping(
-            "thread 1",
-            QBrush(Qt::red)
-            );
+        logView.setLoggerBackgroundBrush("thread 1", QBrush(Qt::red));
         }
         );
 
@@ -88,10 +85,7 @@ void configureToolbar(
         clearRedBackgroundThread1,
         &QAction::triggered,
         [&logView](bool) {
-        logView.setForegroundMapping(
-            "thread 1",
-            std::nullopt
-        );
+        logView.setLoggerBackgroundBrush("thread 1", std::nullopt);
         }
     );
 

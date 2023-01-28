@@ -105,11 +105,51 @@ public:
      */
     std::optional<std::size_t> getMaxEntries() const;
 
-    void setForegroundMapping(const std::string& loggerName, std::optional<QBrush> brush);
-    std::optional<QBrush> getForegroundMapping(const std::string& loggerName) const;
+    /**
+     * @brief Set the foreground QBrush for the messages of the corresponding
+     * logger.
+     *
+     * @param std::string_view the name of the logger of which to set the
+     * foreground brush
+     * @param std::optional<QBrush> the brush object or std::nullopt
+     */
+    void setLoggerForegroundBrush(
+        std::string_view loggerName, std::optional<QBrush> brush
+    );
 
-    void setBackgroundMapping(const std::string& loggerName, std::optional<QBrush> brush);
-    std::optional<QBrush> getBackgroundMapping(const std::string& loggerName) const;
+    /**
+     * @brief Get the foreground QBrush for the messages of the corresponding
+     * logger.
+     *
+     * @param std::string_view the name of the logger of which to get the
+     * foreground brush from
+     * @return std::optional<QBrush> the QBrush object or std::nullopt
+     */
+    std::optional<QBrush> getLoggerForegroundBrush(std::string_view loggerName
+    ) const;
+
+    /**
+     * @brief Set the background QBrush for the messages of the corresponding
+     * logger.
+     *
+     * @param std::string_view the name of the logger of which to set the
+     * background brush
+     * @param std::optional<QBrush> the brush object or std::nullopt
+     */
+    void setLoggerBackgroundBrush(
+        std::string_view, std::optional<QBrush> brush
+    );
+
+    /**
+     * @brief Get the background QBrush for the messages of the corresponding
+     * logger.
+     *
+     * @param std::string_view the name of the logger of which to get the
+     * background brush from
+     * @return std::optional<QBrush> the QBrush object or std::nullopt
+     */
+    std::optional<QBrush> getLoggerBackgroundBrush(std::string_view loggerName
+    ) const;
 
 private slots:
     void filterData(
