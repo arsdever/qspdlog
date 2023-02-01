@@ -3,6 +3,8 @@
 #include <QDialog>
 #include <optional>
 
+class QSpdLogModel;
+
 class QSpdLogStyleDialog : public QDialog
 {
     Q_OBJECT
@@ -18,8 +20,12 @@ public:
     explicit QSpdLogStyleDialog(QWidget* parent = nullptr);
     ~QSpdLogStyleDialog() override;
 
+    Style result() const;
+    void setModel(const QSpdLogModel* model);
+
     static std::optional<Style> getLoggerStyle();
 
 private:
     Style _result;
+    const QSpdLogModel* _model;
 };

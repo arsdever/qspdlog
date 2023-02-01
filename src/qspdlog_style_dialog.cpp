@@ -1,8 +1,10 @@
-#include <QLineEdit>
 #include <QBoxLayout>
 #include <QDialogButtonBox>
+#include <QLineEdit>
 
 #include "qspdlog_style_dialog.hpp"
+
+#include "qspdlog_model.hpp"
 
 QSpdLogStyleDialog::QSpdLogStyleDialog(QWidget* parent)
     : QDialog(parent)
@@ -10,10 +12,13 @@ QSpdLogStyleDialog::QSpdLogStyleDialog(QWidget* parent)
     QVBoxLayout* layout = new QVBoxLayout(this);
     QLineEdit* loggerNameEdit = new QLineEdit();
     loggerNameEdit->setPlaceholderText("Logger name");
+    loggerNameEdit->setObjectName("loggerNameEdit");
     QLineEdit* backgroundColorEdit = new QLineEdit();
     backgroundColorEdit->setPlaceholderText("Background color");
+    backgroundColorEdit->setObjectName("backgroundColorEdit");
     QLineEdit* textColorEdit = new QLineEdit();
     textColorEdit->setPlaceholderText("Text color");
+    textColorEdit->setObjectName("textColorEdit");
 
     layout->addWidget(loggerNameEdit);
     layout->addWidget(backgroundColorEdit);
@@ -22,6 +27,23 @@ QSpdLogStyleDialog::QSpdLogStyleDialog(QWidget* parent)
     QDialogButtonBox* buttonBox =
         new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
+    buttonBox->setObjectName("buttonBox");
+
+    connect(
+        loggerNameEdit,
+        &QLineEdit::textChanged,
+        this,
+        [ this, backgroundColorEdit, textColorEdit ](const QString& name) {
+        std::string namestdstr = name.toStdString();
+        auto bg = _model->getLoggerBackground(namestdstr);
+        auto fg = _model->getLoggerForeground(namestdstr);
+
+        if (bg)
+            backgroundColorEdit->setText(bg.value().color().name());
+
+        if (fg)
+            textColorEdit->setText(fg.value().name());
+        });
 
     connect(
         buttonBox,
@@ -51,6 +73,10 @@ QSpdLogStyleDialog::QSpdLogStyleDialog(QWidget* parent)
 }
 
 QSpdLogStyleDialog::~QSpdLogStyleDialog() = default;
+
+QSpdLogStyleDialog::Style QSpdLogStyleDialog::result() const { return _result; }
+
+void QSpdLogStyleDialog::setModel(const QSpdLogModel* model) { _model = model; }
 
 std::optional<QSpdLogStyleDialog::Style> QSpdLogStyleDialog::getLoggerStyle()
 {

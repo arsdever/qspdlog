@@ -105,23 +105,19 @@ void QSpdLog::registerToolbar(QAbstractSpdLogToolBar* toolbarInterface)
     connect(regex, &QAction::toggled, this, updateFilter);
     connect(caseSensitive, &QAction::toggled, this, updateFilter);
     connect(style, &QAction::triggered, this, [ this ]() {
-        std::optional<QSpdLogStyleDialog::Style> result =
-            QSpdLogStyleDialog::getLoggerStyle();
-
-        if (!result)
+        QSpdLogStyleDialog dialog;
+        dialog.setModel(_sourceModel);
+        dialog.setObjectName("qspdlogStyleDialog");
+        if (!dialog.exec())
             return;
 
-        QSpdLogStyleDialog::Style value = result.value();
+        QSpdLogStyleDialog::Style value = dialog.result();
 
-        if (value.backgroundColor)
-            _sourceModel->setLoggerBackground(
-                value.loggerName, value.backgroundColor.value()
-            );
+        _sourceModel->setLoggerBackground(
+            value.loggerName, value.backgroundColor
+        );
 
-        if (value.textColor)
-            _sourceModel->setLoggerForeground(
-                value.loggerName, value.textColor.value()
-            );
+        _sourceModel->setLoggerForeground(value.loggerName, value.textColor);
     });
     connect(
         autoScrollPolicyCombo,
@@ -225,8 +221,7 @@ void QSpdLog::setLoggerForeground(
     _sourceModel->setLoggerForeground(loggerName, brush);
 }
 
-std::optional<QColor> QSpdLog::getLoggerForeground(
-    std::string_view loggerName
+std::optional<QColor> QSpdLog::getLoggerForeground(std::string_view loggerName
 ) const
 {
     return _sourceModel->getLoggerForeground(loggerName);
@@ -239,8 +234,7 @@ void QSpdLog::setLoggerBackground(
     _sourceModel->setLoggerBackground(loggerName, brush);
 }
 
-std::optional<QBrush> QSpdLog::getLoggerBackground(
-    std::string_view loggerName
+std::optional<QBrush> QSpdLog::getLoggerBackground(std::string_view loggerName
 ) const
 {
     return _sourceModel->getLoggerBackground(loggerName);

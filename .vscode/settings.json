@@ -84,5 +84,6 @@
 		"streambuf": "cpp",
 		"*.rh": "cpp"
 	},
-	"C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
+	"C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+	"sonarlint.pathToCompileCommands": "${workspaceFolder}/build/compile_commands.json"
 }
