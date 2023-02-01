@@ -77,12 +77,3 @@ QSpdLogStyleDialog::~QSpdLogStyleDialog() = default;
 QSpdLogStyleDialog::Style QSpdLogStyleDialog::result() const { return _result; }
 
 void QSpdLogStyleDialog::setModel(const QSpdLogModel* model) { _model = model; }
-
-std::optional<QSpdLogStyleDialog::Style> QSpdLogStyleDialog::getLoggerStyle()
-{
-    QSpdLogStyleDialog dialog;
-    if (dialog.exec())
-        return dialog._result;
-
-    return {};
-}

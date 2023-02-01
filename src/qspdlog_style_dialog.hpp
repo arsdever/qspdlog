@@ -23,8 +23,6 @@ public:
     Style result() const;
     void setModel(const QSpdLogModel* model);
 
-    static std::optional<Style> getLoggerStyle();
-
 private:
     Style _result;
     const QSpdLogModel* _model;

@@ -1,9 +1,13 @@
 #include <QAction>
 #include <QComboBox>
+#include <QDialog>
+#include <QDialogButtonBox>
 #include <QHeaderView>
 #include <QLineEdit>
 #include <QMenu>
+#include <QMessageBox>
 #include <QObject>
+#include <QPushButton>
 #include <QRegularExpression>
 #include <QScrollArea>
 #include <QScrollBar>
@@ -455,6 +459,192 @@ private slots:
         headerView->customContextMenuRequested(QPoint(5, 5));
         QCOMPARE(headerView->count(), 4);
         QCOMPARE(headerView->hiddenSectionCount(), 1);
+    }
+
+    void setStyleFromToolbar()
+    {
+        QSpdLog widget;
+        auto testLogger = std::make_shared<spdlog::logger>("test");
+        auto testLogger1 = std::make_shared<spdlog::logger>("test1");
+
+        testLogger->sinks().push_back(widget.sink());
+        testLogger1->sinks().push_back(widget.sink());
+
+        std::unique_ptr<QAbstractSpdLogToolBar> toolbar(createToolBar());
+        widget.registerToolbar(toolbar.get());
+        QAction* style = toolbar->style();
+
+        auto dialogManipThread =
+            manipulateStyleDialog("test", "#ff0000", "#00ff00", true);
+        style->trigger();
+        dialogManipThread.join();
+
+        testLogger->info("test");
+        testLogger1->info("test1");
+
+        const QTreeView* treeView =
+            widget.findChild<const QTreeView*>("qspdlogTreeView");
+        const QAbstractItemModel* model = treeView->model();
+        QModelIndex index = model->index(0, 3);
+        QCOMPARE(
+            model->data(index, Qt::DisplayRole).value<QString>(),
+            QString("test")
+        );
+        QCOMPARE(
+            model->data(index, Qt::BackgroundRole).value<QColor>(),
+            QColor("#ff0000")
+        );
+        QCOMPARE(
+            model->data(index, Qt::ForegroundRole).value<QColor>(),
+            QColor("#00ff00")
+        );
+
+        index = model->index(1, 3);
+        QCOMPARE(
+            model->data(index, Qt::DisplayRole).value<QString>(),
+            QString("test1")
+        );
+        QCOMPARE(
+            model->data(index, Qt::BackgroundRole).value<QColor>(), QColor {}
+        );
+        QCOMPARE(
+            model->data(index, Qt::ForegroundRole).value<QColor>(), QColor {}
+        );
+
+        dialogManipThread =
+            manipulateStyleDialog("test", std::nullopt, std::nullopt, true);
+        style->trigger();
+        dialogManipThread.join();
+
+        index = model->index(0, 3);
+        QCOMPARE(
+            model->data(index, Qt::DisplayRole).value<QString>(),
+            QString("test")
+        );
+        QCOMPARE(
+            model->data(index, Qt::BackgroundRole).value<QColor>(),
+            QColor("#ff0000")
+        );
+        QCOMPARE(
+            model->data(index, Qt::ForegroundRole).value<QColor>(),
+            QColor("#00ff00")
+        );
+
+        dialogManipThread = manipulateStyleDialog("test", "", "", true);
+        style->trigger();
+        dialogManipThread.join();
+
+        index = model->index(0, 3);
+        QCOMPARE(
+            model->data(index, Qt::DisplayRole).value<QString>(),
+            QString("test")
+        );
+        QCOMPARE(
+            model->data(index, Qt::BackgroundRole).value<QColor>(), QColor {}
+        );
+        QCOMPARE(
+            model->data(index, Qt::ForegroundRole).value<QColor>(), QColor {}
+        );
+
+        dialogManipThread = manipulateStyleDialog("test", "", "", false);
+        style->trigger();
+        dialogManipThread.join();
+
+        index = model->index(0, 3);
+        QCOMPARE(
+            model->data(index, Qt::DisplayRole).value<QString>(),
+            QString("test")
+        );
+        QCOMPARE(
+            model->data(index, Qt::BackgroundRole).value<QColor>(), QColor {}
+        );
+        QCOMPARE(
+            model->data(index, Qt::ForegroundRole).value<QColor>(), QColor {}
+        );
+        index = model->index(1, 3);
+        QCOMPARE(
+            model->data(index, Qt::DisplayRole).value<QString>(),
+            QString("test1")
+        );
+        QCOMPARE(
+            model->data(index, Qt::BackgroundRole).value<QColor>(), QColor {}
+        );
+        QCOMPARE(
+            model->data(index, Qt::ForegroundRole).value<QColor>(), QColor {}
+        );
+    }
+
+private:
+    std::thread manipulateStyleDialog(
+        std::optional<QString> name,
+        std::optional<QString> background,
+        std::optional<QString> foreground,
+        bool accept
+    ) const
+    {
+        return std::thread([ n = std::move(name),
+                             bg = std::move(background),
+                             fg = std::move(foreground),
+                             accept ] {
+            QDialog* dialog;
+            bool success = QTest::qWaitFor(
+                [ &dialog ]() -> bool {
+                    auto widgets = qApp->topLevelWidgets();
+                    auto it = std::find_if(
+                        widgets.begin(),
+                        widgets.end(),
+                        [](QWidget* widget) {
+                    return widget->objectName() == "qspdlogStyleDialog";
+                        });
+
+                    if (it == widgets.end())
+                        return false;
+
+                    dialog = qobject_cast<QDialog*>(*it);
+                    return true;
+                },
+                1000
+            );
+
+            QVERIFY(success);
+
+            QMetaObject::invokeMethod(
+                dialog,
+                [ name = std::move(n),
+                  background = std::move(bg),
+                  foreground = std::move(fg),
+                  accept,
+                  dialog ] {
+                QVERIFY(dialog);
+                QLineEdit* loggerNameEdit =
+                    dialog->findChild<QLineEdit*>("loggerNameEdit");
+                QVERIFY(loggerNameEdit);
+                QLineEdit* backgroundColorEdit =
+                    dialog->findChild<QLineEdit*>("backgroundColorEdit");
+                QVERIFY(backgroundColorEdit);
+                QLineEdit* textColorEdit =
+                    dialog->findChild<QLineEdit*>("textColorEdit");
+                QVERIFY(textColorEdit);
+
+                if (name)
+                    loggerNameEdit->setText(name.value());
+
+                if (background)
+                    backgroundColorEdit->setText(background.value());
+
+                if (foreground)
+                    textColorEdit->setText(foreground.value());
+
+                QDialogButtonBox* buttonBox =
+                    dialog->findChild<QDialogButtonBox*>("buttonBox");
+                QVERIFY(buttonBox);
+                if (accept)
+                    buttonBox->button(QDialogButtonBox::Ok)->click();
+                else
+                    buttonBox->button(QDialogButtonBox::Cancel)->click();
+                },
+                Qt::QueuedConnection);
+        });
     }
 };
 
