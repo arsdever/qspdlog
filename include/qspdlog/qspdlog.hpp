@@ -105,6 +105,16 @@ public:
      */
     std::optional<std::size_t> getMaxEntries() const;
 
+    /**
+     * @brief Set the policy of the auto-scrolling feature.
+     *
+     * This function will set the policy for auto-scrolling and will update all
+     * the registered toolbars.
+     *
+     * @param policy the auto-scrolling policy
+     */
+    void setAutoScrollPolicy(AutoScrollPolicy policy);
+
 private slots:
     void filterData(
         const QString& text, bool isRegularExpression, bool isCaseSensitive
