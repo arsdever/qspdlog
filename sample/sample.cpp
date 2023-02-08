@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <QToolBar>
 #include <QToolButton>
+#include <thread>
 
 #include "qspdlog/qabstract_spdlog_toolbar.hpp"
 #include "qspdlog/qspdlog.hpp"
