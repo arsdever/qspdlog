@@ -37,6 +37,9 @@ public:
 #pragma endregion
 
 private:
+    void insertEntry(entry_t entry);
+
+private:
     std::deque<entry_t> _items;
     std::optional<std::size_t> _maxEntries;
 };

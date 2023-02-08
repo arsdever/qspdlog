@@ -12,6 +12,7 @@ option(QSPDLOG_BUILD_TESTING "Option to enable/disable building the tests"
        ${BUILD_TESTING})
 option(QSPDLOG_REPORT_COVERAGE "Option to enable/disable coverage report"
        ${BUILD_COVERAGE})
+option(QSPDLOG_DISABLE_QT_LOGGING "Option to disable Qt logging" OFF)
 
 # set QT version to 6 if not set already
 if("${QT_VERSION}" STREQUAL "")
@@ -33,6 +34,12 @@ if(QSPDLOG_REPORT_COVERAGE)
   message("Building with coverage report")
   add_compile_options(-fprofile-instr-generate -fcoverage-mapping --coverage)
   add_link_options(-fprofile-instr-generate -fcoverage-mapping --coverage)
+endif()
+
+if(QSPDLOG_DISABLE_QT_LOGGING)
+  message("Disabling Qt logging")
+  add_compile_definitions("QT_NO_DEBUG_OUTPUT" "QT_NO_INFO_OUTPUT"
+                          "QT_NO_WARNING_OUTPUT")
 endif()
 
 add_subdirectory(src)

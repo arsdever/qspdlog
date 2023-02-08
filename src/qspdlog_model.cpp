@@ -1,6 +1,7 @@
 #include <QDateTime>
 #include <QFile>
 #include <QIcon>
+#include <QThread>
 
 #include "qspdlog_model.hpp"
 
@@ -31,17 +32,16 @@ QSpdLogModel::QSpdLogModel(QObject* parent)
 
 void QSpdLogModel::addEntry(entry_t entry)
 {
-    if (_maxEntries > 0 && _items.size() == _maxEntries) {
-        beginRemoveRows(QModelIndex(), 0, 0);
-        _items.pop_front();
-        endRemoveRows();
+    if (QThread::currentThread() == thread()) {
+        insertEntry(std::move(entry));
+        return;
     }
 
-    beginInsertRows(QModelIndex(), rowCount(), rowCount());
-
-    _items.push_back(std::move(entry));
-
-    endInsertRows();
+    QMetaObject::invokeMethod(
+        this,
+        [ this, e = std::move(entry) ] { insertEntry(e); },
+        Qt::QueuedConnection
+    );
 }
 
 void QSpdLogModel::setMaxEntries(std::optional<std::size_t> maxEntries)
@@ -146,3 +146,16 @@ QVariant QSpdLogModel::headerData(
 
     return QVariant();
 }
+
+void QSpdLogModel::insertEntry(entry_t e)
+{
+    if (_maxEntries > 0 && _items.size() == _maxEntries) {
+        beginRemoveRows(QModelIndex(), 0, 0);
+        _items.pop_front();
+        endRemoveRows();
+    }
+
+    beginInsertRows(QModelIndex(), rowCount(), rowCount());
+    _items.push_back(std::move(e));
+    endInsertRows();
+};
