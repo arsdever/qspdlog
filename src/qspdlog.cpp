@@ -138,10 +138,8 @@ void QSpdLog::filterData(
     }
 }
 
-void QSpdLog::updateAutoScrollPolicy(int index)
+void QSpdLog::setAutoScrollPolicy(AutoScrollPolicy policy)
 {
-    AutoScrollPolicy policy = static_cast<AutoScrollPolicy>(index);
-
     QObject::disconnect(_scrollConnection);
 
     switch (policy) {
@@ -178,6 +176,22 @@ void QSpdLog::updateAutoScrollPolicy(int index)
             break;
         }
     }
+
+    for (auto& toolbar : _toolbars) {
+        QComboBox* policyComboBox = toolbar->autoScrollPolicy();
+        if (!policyComboBox)
+            continue;
+
+        auto blocked = policyComboBox->blockSignals(true);
+        policyComboBox->setCurrentIndex(static_cast<int>(policy));
+        policyComboBox->blockSignals(blocked);
+    }
+}
+
+void QSpdLog::updateAutoScrollPolicy(int index)
+{
+    AutoScrollPolicy policy = static_cast<AutoScrollPolicy>(index);
+    setAutoScrollPolicy(policy);
 }
 
 spdlog::sink_ptr QSpdLog::sink() { return _sink; }
