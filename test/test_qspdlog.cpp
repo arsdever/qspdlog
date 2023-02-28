@@ -346,6 +346,12 @@ private slots:
             logger->info("test");
 
         QCOMPARE(scrollBar->value(), scrollBar->maximum());
+
+        widget.setAutoScrollPolicy(AutoScrollPolicy::AutoScrollPolicyDisabled);
+        QCOMPARE(
+            autoScrollPolicy->currentIndex(),
+            static_cast<int>(AutoScrollPolicy::AutoScrollPolicyDisabled)
+        );
     }
 
     void autoScrollPolicySmartScroll(QAbstractSpdLogToolBar* toolbar)
