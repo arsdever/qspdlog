@@ -13,6 +13,7 @@
 #include "qspdlog/qabstract_spdlog_toolbar.hpp"
 #include "qspdlog_model.hpp"
 #include "qspdlog_proxy_model.hpp"
+#include "qspdlog_style_dialog.hpp"
 #include "qt_logger_sink.hpp"
 
 QSpdLog::QSpdLog(QWidget* parent)
@@ -91,6 +92,7 @@ void QSpdLog::registerToolbar(QAbstractSpdLogToolBar* toolbarInterface)
     QLineEdit* filter = toolbarInterface->filter();
     QAction* regex = toolbarInterface->regex();
     QAction* caseSensitive = toolbarInterface->caseSensitive();
+    QAction* style = toolbarInterface->style();
     QComboBox* autoScrollPolicyCombo = toolbarInterface->autoScrollPolicy();
 
     auto updateFilter = [ this, filter, regex, caseSensitive ]() {
@@ -102,6 +104,21 @@ void QSpdLog::registerToolbar(QAbstractSpdLogToolBar* toolbarInterface)
     connect(filter, &QLineEdit::textChanged, this, updateFilter);
     connect(regex, &QAction::toggled, this, updateFilter);
     connect(caseSensitive, &QAction::toggled, this, updateFilter);
+    connect(style, &QAction::triggered, this, [ this ]() {
+        QSpdLogStyleDialog dialog;
+        dialog.setModel(_sourceModel);
+        dialog.setObjectName("qspdlogStyleDialog");
+        if (!dialog.exec())
+            return;
+
+        QSpdLogStyleDialog::Style value = dialog.result();
+
+        _sourceModel->setLoggerBackground(
+            value.loggerName, value.backgroundColor
+        );
+
+        _sourceModel->setLoggerForeground(value.loggerName, value.textColor);
+    });
     connect(
         autoScrollPolicyCombo,
         QOverload<int>::of(&QComboBox::currentIndexChanged),
@@ -209,4 +226,30 @@ void QSpdLog::setMaxEntries(std::optional<std::size_t> maxEntries)
 std::optional<std::size_t> QSpdLog::getMaxEntries() const
 {
     return _sourceModel->getMaxEntries();
+}
+
+void QSpdLog::setLoggerForeground(
+    std::string_view loggerName, std::optional<QColor> brush
+)
+{
+    _sourceModel->setLoggerForeground(loggerName, brush);
+}
+
+std::optional<QColor> QSpdLog::getLoggerForeground(std::string_view loggerName
+) const
+{
+    return _sourceModel->getLoggerForeground(loggerName);
+}
+
+void QSpdLog::setLoggerBackground(
+    std::string_view loggerName, std::optional<QBrush> brush
+)
+{
+    _sourceModel->setLoggerBackground(loggerName, brush);
+}
+
+std::optional<QBrush> QSpdLog::getLoggerBackground(std::string_view loggerName
+) const
+{
+    return _sourceModel->getLoggerBackground(loggerName);
 }

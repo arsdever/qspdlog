@@ -106,6 +106,50 @@ public:
     std::optional<std::size_t> getMaxEntries() const;
 
     /**
+     * @brief Set the foreground QBrush for the messages of the corresponding
+     * logger.
+     *
+     * @param std::string_view the name of the logger of which to set the
+     * foreground brush
+     * @param std::optional<QBrush> the brush object or std::nullopt
+     */
+    void setLoggerForeground(
+        std::string_view loggerName, std::optional<QColor> brush
+    );
+
+    /**
+     * @brief Get the foreground QBrush for the messages of the corresponding
+     * logger.
+     *
+     * @param std::string_view the name of the logger of which to get the
+     * foreground brush from
+     * @return std::optional<QBrush> the QBrush object or std::nullopt
+     */
+    std::optional<QColor> getLoggerForeground(std::string_view loggerName
+    ) const;
+
+    /**
+     * @brief Set the background QBrush for the messages of the corresponding
+     * logger.
+     *
+     * @param std::string_view the name of the logger of which to set the
+     * background brush
+     * @param std::optional<QBrush> the brush object or std::nullopt
+     */
+    void setLoggerBackground(std::string_view, std::optional<QBrush> brush);
+
+    /**
+     * @brief Get the background QBrush for the messages of the corresponding
+     * logger.
+     *
+     * @param std::string_view the name of the logger of which to get the
+     * background brush from
+     * @return std::optional<QBrush> the QBrush object or std::nullopt
+     */
+    std::optional<QBrush> getLoggerBackground(std::string_view loggerName
+    ) const;
+
+    /**
      * @brief Set the policy of the auto-scrolling feature.
      *
      * This function will set the policy for auto-scrolling and will update all
