@@ -9,6 +9,7 @@
 #include "qspdlog/qabstract_spdlog_toolbar.hpp"
 #include "qspdlog/qspdlog.hpp"
 #include "spdlog/spdlog.h"
+#include <thread>
 
 std::shared_ptr<spdlog::logger> createLogger(std::string name)
 {

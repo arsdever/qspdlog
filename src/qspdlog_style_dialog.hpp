@@ -14,6 +14,7 @@ public:
         std::string loggerName;
         std::optional<QColor> backgroundColor;
         std::optional<QColor> textColor;
+        bool fontBold;
     };
 
 public:

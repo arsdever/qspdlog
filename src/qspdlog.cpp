@@ -118,6 +118,10 @@ void QSpdLog::registerToolbar(QAbstractSpdLogToolBar* toolbarInterface)
         );
 
         _sourceModel->setLoggerForeground(value.loggerName, value.textColor);
+
+        QFont f;
+        f.setBold(value.fontBold);
+        _sourceModel->setLoggerFont(value.loggerName, f);
     });
     connect(
         autoScrollPolicyCombo,
@@ -252,4 +256,18 @@ std::optional<QBrush> QSpdLog::getLoggerBackground(std::string_view loggerName
 ) const
 {
     return _sourceModel->getLoggerBackground(loggerName);
+}
+
+void QSpdLog::setLoggerFont(
+    std::string_view loggerName, std::optional<QFont> font
+) 
+{
+    _sourceModel->setLoggerFont(loggerName, font);
+}
+
+std::optional<QFont> QSpdLog::getLoggerFont(
+    std::string_view loggerName
+) const
+{
+    return _sourceModel->getLoggerFont(loggerName);
 }

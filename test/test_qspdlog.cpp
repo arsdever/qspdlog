@@ -15,6 +15,7 @@
 #include <QTest>
 #include <QTimer>
 #include <QTreeView>
+#include <QCheckBox>
 
 #include "qspdlog/qabstract_spdlog_toolbar.hpp"
 #include "qspdlog/qspdlog.hpp"
@@ -167,6 +168,21 @@ private slots:
         QCOMPARE(widget.getLoggerForeground("test2"), std::nullopt);
         widget.setLoggerForeground("test", std::nullopt);
         QCOMPARE(widget.getLoggerForeground("test"), std::nullopt);
+    }
+
+    void fontTest()
+    {
+        QSpdLog widget;
+        QFont testFont;
+        testFont.setBold(true);
+        QCOMPARE(widget.getLoggerBackground("test"), std::nullopt);
+        widget.setLoggerFont("test", testFont);
+        QCOMPARE(widget.getLoggerFont("test"), testFont);
+        QCOMPARE(widget.getLoggerFont("test2"), std::nullopt);
+        widget.setLoggerFont("test", std::nullopt);
+        widget.setLoggerFont("test2", testFont);
+        QCOMPARE(widget.getLoggerFont("test"), std::nullopt);
+        QCOMPARE(widget.getLoggerFont("test2"), testFont);
     }
 
     void runToolbarTests()
@@ -480,8 +496,10 @@ private slots:
         widget.registerToolbar(toolbar.get());
         QAction* style = toolbar->style();
 
+        QFont f;
+        f.setBold(true);
         auto dialogManipThread =
-            manipulateStyleDialog("test", "#ff0000", "#00ff00", true);
+            manipulateStyleDialog("test", "#ff0000", "#00ff00", f, true);
         style->trigger();
         dialogManipThread.join();
 
@@ -504,6 +522,10 @@ private slots:
             model->data(index, Qt::ForegroundRole).value<QColor>(),
             QColor("#00ff00")
         );
+        QCOMPARE(
+            model->data(index, Qt::FontRole).value<QFont>(),
+            f
+        );
 
         index = model->index(1, 3);
         QCOMPARE(
@@ -516,9 +538,12 @@ private slots:
         QCOMPARE(
             model->data(index, Qt::ForegroundRole).value<QColor>(), QColor {}
         );
+        QCOMPARE(
+            model->data(index, Qt::FontRole).value<QFont>(), QFont {}
+        );
 
         dialogManipThread =
-            manipulateStyleDialog("test", std::nullopt, std::nullopt, true);
+            manipulateStyleDialog("test", std::nullopt, std::nullopt, std::nullopt, true);
         style->trigger();
         dialogManipThread.join();
 
@@ -535,8 +560,12 @@ private slots:
             model->data(index, Qt::ForegroundRole).value<QColor>(),
             QColor("#00ff00")
         );
+        QCOMPARE(
+            model->data(index, Qt::FontRole).value<QFont>(),
+            f
+        );
 
-        dialogManipThread = manipulateStyleDialog("test", "", "", true);
+        dialogManipThread = manipulateStyleDialog("test", "", "", QFont(), true);
         style->trigger();
         dialogManipThread.join();
 
@@ -551,8 +580,11 @@ private slots:
         QCOMPARE(
             model->data(index, Qt::ForegroundRole).value<QColor>(), QColor {}
         );
+        QCOMPARE(
+            model->data(index, Qt::FontRole).value<QFont>(), QFont {}
+        );
 
-        dialogManipThread = manipulateStyleDialog("test", "", "", false);
+        dialogManipThread = manipulateStyleDialog("test", "", "", QFont(), false);
         style->trigger();
         dialogManipThread.join();
 
@@ -566,6 +598,9 @@ private slots:
         );
         QCOMPARE(
             model->data(index, Qt::ForegroundRole).value<QColor>(), QColor {}
+        );
+        QCOMPARE(
+            model->data(index, Qt::FontRole).value<QFont>(), QFont {}
         );
         index = model->index(1, 3);
         QCOMPARE(
@@ -578,6 +613,9 @@ private slots:
         QCOMPARE(
             model->data(index, Qt::ForegroundRole).value<QColor>(), QColor {}
         );
+        QCOMPARE(
+            model->data(index, Qt::FontRole).value<QFont>(), QFont {}
+        );
     }
 
 private:
@@ -585,12 +623,14 @@ private:
         std::optional<QString> name,
         std::optional<QString> background,
         std::optional<QString> foreground,
+        std::optional<QFont> font,
         bool accept
     ) const
     {
         return std::thread([ n = std::move(name),
                              bg = std::move(background),
                              fg = std::move(foreground),
+                             fnt = std::move(font),
                              accept ] {
             QDialog* dialog;
             bool success = QTest::qWaitFor(
@@ -619,6 +659,7 @@ private:
                 [ name = std::move(n),
                   background = std::move(bg),
                   foreground = std::move(fg),
+                  font = std::move(fnt),
                   accept,
                   dialog ] {
                 QVERIFY(dialog);
@@ -631,6 +672,9 @@ private:
                 QLineEdit* textColorEdit =
                     dialog->findChild<QLineEdit*>("textColorEdit");
                 QVERIFY(textColorEdit);
+                QCheckBox* checkBoxBold = 
+                    dialog->findChild<QCheckBox*>("checkBoxBold");
+                QVERIFY(checkBoxBold);
 
                 if (name)
                     loggerNameEdit->setText(name.value());
@@ -640,6 +684,9 @@ private:
 
                 if (foreground)
                     textColorEdit->setText(foreground.value());
+                
+                if (font)
+                    checkBoxBold->setChecked(font.value().bold());
 
                 QDialogButtonBox* buttonBox =
                     dialog->findChild<QDialogButtonBox*>("buttonBox");
