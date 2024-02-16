@@ -1,4 +1,5 @@
 #include <QBoxLayout>
+#include <QCheckBox>
 #include <QDialogButtonBox>
 #include <QLineEdit>
 
@@ -19,10 +20,13 @@ QSpdLogStyleDialog::QSpdLogStyleDialog(QWidget* parent)
     QLineEdit* textColorEdit = new QLineEdit();
     textColorEdit->setPlaceholderText("Text color");
     textColorEdit->setObjectName("textColorEdit");
+    QCheckBox* checkBoxBold = new QCheckBox("Bold");
+    checkBoxBold->setObjectName("checkBoxBold");
 
     layout->addWidget(loggerNameEdit);
     layout->addWidget(backgroundColorEdit);
     layout->addWidget(textColorEdit);
+    layout->addWidget(checkBoxBold);
 
     QDialogButtonBox* buttonBox =
         new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
@@ -33,23 +37,41 @@ QSpdLogStyleDialog::QSpdLogStyleDialog(QWidget* parent)
         loggerNameEdit,
         &QLineEdit::textChanged,
         this,
-        [ this, backgroundColorEdit, textColorEdit ](const QString& name) {
+        [ this, backgroundColorEdit, textColorEdit, checkBoxBold ](
+            const QString& name
+        ) {
         std::string namestdstr = name.toStdString();
         auto bg = _model->getLoggerBackground(namestdstr);
         auto fg = _model->getLoggerForeground(namestdstr);
+        auto fnt = _model->getLoggerFont(namestdstr);
 
         if (bg)
             backgroundColorEdit->setText(bg.value().color().name());
+        else
+            backgroundColorEdit->setText("");
 
         if (fg)
             textColorEdit->setText(fg.value().name());
+        else
+            textColorEdit->setText("");
+
+        if (fnt) {
+            bool isBold = fnt->bold();
+            checkBoxBold->setChecked(isBold);
+        } else {
+            checkBoxBold->setChecked(false);
+        }
         });
 
     connect(
         buttonBox,
         &QDialogButtonBox::accepted,
         this,
-        [ this, loggerNameEdit, backgroundColorEdit, textColorEdit ]() {
+        [ this,
+          loggerNameEdit,
+          backgroundColorEdit,
+          textColorEdit,
+          checkBoxBold ]() {
         if (!loggerNameEdit->text().isEmpty())
             reject();
 
@@ -65,8 +87,11 @@ QSpdLogStyleDialog::QSpdLogStyleDialog(QWidget* parent)
         else
             _result.textColor = std::nullopt;
 
+        _result.fontBold = checkBoxBold->isChecked();
+
         accept();
         });
+
     connect(buttonBox, &QDialogButtonBox::rejected, this, [ this ]() {
         reject();
     });

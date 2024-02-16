@@ -3,6 +3,7 @@
 #include <QAbstractListModel>
 #include <deque>
 #include <optional>
+#include <QFont>
 
 class QSpdLogModel : public QAbstractListModel
 {
@@ -32,6 +33,9 @@ public:
     void setLoggerBackground(std::string_view loggerName, std::optional<QBrush> brush);
     std::optional<QBrush> getLoggerBackground(std::string_view loggerName) const;
 
+    void setLoggerFont(std::string_view loggerName, std::optional<QFont> font);
+    std::optional<QFont> getLoggerFont(std::string_view loggerName) const;
+
 #pragma region QAbstractListModel
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     int columnCount(const QModelIndex& parent = QModelIndex()) const override;
@@ -47,4 +51,5 @@ private:
     std::optional<std::size_t> _maxEntries;
     std::map<std::string, QBrush> _backgroundMappings;
     std::map<std::string, QColor> _foregroundMappings;
+    std::map<std::string, QFont> _fontMappings;
 };

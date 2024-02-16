@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QFont>
 #include <QWidget>
 
 namespace spdlog
@@ -148,6 +149,26 @@ public:
      */
     std::optional<QBrush> getLoggerBackground(std::string_view loggerName
     ) const;
+
+    /**
+     * @brief Set the text QFont for the messages of the corresponding
+     * logger.
+     *
+     * @param std::string_view the name of the logger of which to set the
+     * font
+     * @param std::optional<QFont> the QFont object or std::nullopt
+     */
+    void setLoggerFont(std::string_view loggerName, std::optional<QFont> font);
+
+    /**
+     * @brief Get the text QFont for the messages of the corresponding
+     * logger.
+     *
+     * @param std::string_view the name of the logger of which to get the
+     * font from
+     * @return std::optional<QFont> the QFont object or std::nullopt
+     */
+    std::optional<QFont> getLoggerFont(std::string_view loggerName) const;
 
     /**
      * @brief Set the policy of the auto-scrolling feature.

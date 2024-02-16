@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <QToolBar>
 #include <QToolButton>
+#include <thread>
 
 #include "qspdlog/qabstract_spdlog_toolbar.hpp"
 #include "qspdlog/qspdlog.hpp"
@@ -76,7 +77,7 @@ void configureToolbar(
         &QAction::triggered,
         [ logger ](bool) {
         // generate 10 messages with random levels
-        for (int i = 0; i < 10; ++i) {
+        for (int i = 0; i < 10; ++i)
             logger->log(
                 static_cast<spdlog::level::level_enum>(
                     rand() % spdlog::level::off
@@ -84,7 +85,6 @@ void configureToolbar(
                 "Message {}",
                 i
             );
-        }
         });
 
     generateMultipleAction->connect(

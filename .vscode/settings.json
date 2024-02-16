@@ -82,7 +82,13 @@
 		"queue": "cpp",
 		"semaphore": "cpp",
 		"streambuf": "cpp",
-		"*.rh": "cpp"
+		"*.rh": "cpp",
+		"codecvt": "cpp",
+		"list": "cpp",
+		"map": "cpp",
+		"future": "cpp",
+		"iomanip": "cpp",
+		"cinttypes": "cpp"
 	},
 	"C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
 	"sonarlint.pathToCompileCommands": "${workspaceFolder}/build/compile_commands.json"
