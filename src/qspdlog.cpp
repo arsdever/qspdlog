@@ -260,14 +260,12 @@ std::optional<QBrush> QSpdLog::getLoggerBackground(std::string_view loggerName
 
 void QSpdLog::setLoggerFont(
     std::string_view loggerName, std::optional<QFont> font
-) 
+)
 {
     _sourceModel->setLoggerFont(loggerName, font);
 }
 
-std::optional<QFont> QSpdLog::getLoggerFont(
-    std::string_view loggerName
-) const
+std::optional<QFont> QSpdLog::getLoggerFont(std::string_view loggerName) const
 {
     return _sourceModel->getLoggerFont(loggerName);
 }

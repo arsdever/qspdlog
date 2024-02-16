@@ -1,8 +1,8 @@
 #include <QBrush>
 #include <QDateTime>
 #include <QFile>
-#include <QIcon>
 #include <QFont>
+#include <QIcon>
 
 #include "qspdlog_model.hpp"
 
@@ -151,7 +151,7 @@ QVariant QSpdLogModel::data(const QModelIndex& index, int role) const
             std::string loggerName = _items[ index.row() ].loggerName;
             if (_fontMappings.contains(loggerName))
                 return _fontMappings.at(loggerName);
-            
+
             break;
         }
 
@@ -172,6 +172,7 @@ QVariant QSpdLogModel::headerData(
 
     return QVariant();
 }
+
 void QSpdLogModel::setLoggerForeground(
     std::string_view loggerName, std::optional<QColor> color
 )
@@ -198,6 +199,7 @@ void QSpdLogModel::setLoggerForeground(
         );
     }
 }
+
 std::optional<QColor> QSpdLogModel::getLoggerForeground(
     std::string_view loggerName
 ) const
@@ -207,6 +209,7 @@ std::optional<QColor> QSpdLogModel::getLoggerForeground(
 
     return std::nullopt;
 }
+
 void QSpdLogModel::setLoggerBackground(
     std::string_view loggerName, std::optional<QBrush> brush
 )
@@ -233,6 +236,7 @@ void QSpdLogModel::setLoggerBackground(
         );
     }
 }
+
 std::optional<QBrush> QSpdLogModel::getLoggerBackground(
     std::string_view loggerName
 ) const
@@ -256,21 +260,17 @@ void QSpdLogModel::setLoggerFont(
     if (font.has_value()) {
         _fontMappings[ std::string(loggerName) ] = font.value();
         emit dataChanged(
-            this->index(0),
-            this->index(lastRow, lastColumn),
-            { Qt::FontRole }
+            this->index(0), this->index(lastRow, lastColumn), { Qt::FontRole }
         );
     } else if (_fontMappings.contains(std::string(loggerName))) {
         _fontMappings.erase(std::string(loggerName));
         emit dataChanged(
-            this->index(0),
-            this->index(lastRow, lastColumn),
-            { Qt::FontRole }
+            this->index(0), this->index(lastRow, lastColumn), { Qt::FontRole }
         );
     }
 }
-std::optional<QFont> QSpdLogModel::getLoggerFont(
-    std::string_view loggerName
+
+std::optional<QFont> QSpdLogModel::getLoggerFont(std::string_view loggerName
 ) const
 {
     if (_fontMappings.contains(std::string(loggerName)))

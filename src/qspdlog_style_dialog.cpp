@@ -1,7 +1,7 @@
 #include <QBoxLayout>
+#include <QCheckBox>
 #include <QDialogButtonBox>
 #include <QLineEdit>
-#include <QCheckBox>
 
 #include "qspdlog_style_dialog.hpp"
 
@@ -37,7 +37,9 @@ QSpdLogStyleDialog::QSpdLogStyleDialog(QWidget* parent)
         loggerNameEdit,
         &QLineEdit::textChanged,
         this,
-        [ this, backgroundColorEdit, textColorEdit, checkBoxBold ](const QString& name) {
+        [ this, backgroundColorEdit, textColorEdit, checkBoxBold ](
+            const QString& name
+        ) {
         std::string namestdstr = name.toStdString();
         auto bg = _model->getLoggerBackground(namestdstr);
         auto fg = _model->getLoggerForeground(namestdstr);
@@ -51,14 +53,12 @@ QSpdLogStyleDialog::QSpdLogStyleDialog(QWidget* parent)
         if (fg)
             textColorEdit->setText(fg.value().name());
         else
-            backgroundColorEdit->setText("");
+            textColorEdit->setText("");
 
-        if (fnt)
-        {
+        if (fnt) {
             bool isBold = fnt->bold();
             checkBoxBold->setChecked(isBold);
-        }else
-        {
+        } else {
             checkBoxBold->setChecked(false);
         }
         });
@@ -67,7 +67,11 @@ QSpdLogStyleDialog::QSpdLogStyleDialog(QWidget* parent)
         buttonBox,
         &QDialogButtonBox::accepted,
         this,
-        [ this, loggerNameEdit, backgroundColorEdit, textColorEdit, checkBoxBold ]() {
+        [ this,
+          loggerNameEdit,
+          backgroundColorEdit,
+          textColorEdit,
+          checkBoxBold ]() {
         if (!loggerNameEdit->text().isEmpty())
             reject();
 
@@ -82,11 +86,12 @@ QSpdLogStyleDialog::QSpdLogStyleDialog(QWidget* parent)
             _result.textColor = QColor(textColorEdit->text());
         else
             _result.textColor = std::nullopt;
-        
+
         _result.fontBold = checkBoxBold->isChecked();
 
         accept();
         });
+
     connect(buttonBox, &QDialogButtonBox::rejected, this, [ this ]() {
         reject();
     });

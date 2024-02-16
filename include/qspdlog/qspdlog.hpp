@@ -1,7 +1,7 @@
 #pragma once
 
-#include <QWidget>
 #include <QFont>
+#include <QWidget>
 
 namespace spdlog
 {
@@ -168,8 +168,7 @@ public:
      * font from
      * @return std::optional<QFont> the QFont object or std::nullopt
      */
-    std::optional<QFont> getLoggerFont(std::string_view loggerName
-    ) const;
+    std::optional<QFont> getLoggerFont(std::string_view loggerName) const;
 
     /**
      * @brief Set the policy of the auto-scrolling feature.
